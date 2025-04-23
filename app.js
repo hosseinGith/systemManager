@@ -168,6 +168,7 @@ app.use((req, res, next) => {
 });
 async function backupDatabaseToSQL({ database, outputFile }) {
   if (!fs) fs = require("fs");
+  console.log(1);
   const tables = await set_data_in_database("SHOW TABLES");
   const tableNames = tables.map((row) => Object.values(row)[0]);
 
@@ -220,10 +221,12 @@ async function sendEmailWithAttachment(mailOptions) {
     if (error) {
       return console.log("Error sending email:", error);
     }
+    console.log("sended");
     set_data_in_database(
       "INSERT INTO `backup`(`backups`) VALUES (CURRENT_TIMESTAMP)"
     );
   });
+  console.log("sending");
 }
 
 const calculateDaysPassed = (inputDate) => {
@@ -239,12 +242,14 @@ const calculateDaysPassed = (inputDate) => {
   return diffDays;
 };
 async function getBackUp() {
+  console.log(1);
   let last_backup = await (
     await set_data_in_database(
       "SELECT * FROM `backup` ORDER BY id DESC LIMIT 1;"
     )
   )[0];
-  if (Math.abs(calculateDaysPassed(last_backup.backups)) < 22) return;
+  if (Math.abs(calculateDaysPassed(last_backup.backups)) < 22)
+    return calculateDaysPassed(last_backup.backups);
   const dbConfig = {
     database: hostDatabase.database,
     outputFile: "backup.sql",
@@ -262,9 +267,10 @@ async function getBackUp() {
       },
     ],
   };
-
+  console.log(1);
   await backupDatabaseToSQL(dbConfig);
   await sendEmailWithAttachment(mailOptions);
+  return true;
 }
 
 function validateUsernameOrPassword(inputString, isTruePersion = false) {
@@ -1491,7 +1497,17 @@ app.get("*/getUpdate", async (req, res, next) => {
         user_res = "";
       }
     if (user_res) {
-      await getBackUp();
+      let result = await getBackUp();
+      if (typeof result === "boolean")
+        res.send(
+          "<div style='text-aligh:center;padding:10px;background:green;color:white'>success</div>"
+        );
+      else
+        res.send(
+          "<div style='text-aligh:center;padding:10px;background:green;color:white'>faild " +
+            result +
+            " days</div>"
+        );
     } else {
       let path = "pages/login.html";
       const data = fs.readFileSync(path, "utf8");
