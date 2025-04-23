@@ -21,6 +21,8 @@ let cookie = false;
 const globalPass = process.env.GLOBAL_PASS;
 const globalKeys = [process.env.GLOBAL_KEY1, process.env.GLOBAL_KEY2];
 const { dbhost, dbuser, dbdatabase, dbpassword } = process.env;
+app.set("trust proxy", 1);
+
 const hostDatabase = {
   host: dbhost,
   user: dbuser,
@@ -164,6 +166,106 @@ app.use((req, res, next) => {
   );
   next();
 });
+async function backupDatabaseToSQL({ database, outputFile }) {
+  if (!fs) fs = require("fs");
+  const tables = await set_data_in_database("SHOW TABLES");
+  const tableNames = tables.map((row) => Object.values(row)[0]);
+
+  let sqlDump = `-- Backup of database: \`${database}\`\n\n`;
+
+  for (const tableName of tableNames) {
+    const createTableRow = await (
+      await set_data_in_database(`SHOW CREATE TABLE \`${tableName}\``)
+    )[0];
+    const createTableSQL = createTableRow["Create Table"];
+    sqlDump += `--\n-- Table structure for table \`${tableName}\`\n--\n\n`;
+    sqlDump += `DROP TABLE IF EXISTS \`${tableName}\`;\n`;
+    sqlDump += `${createTableSQL};\n\n`;
+
+    const rows = await set_data_in_database(`SELECT * FROM \`${tableName}\``);
+    if (rows.length > 0) {
+      sqlDump += `--\n-- Dumping data for table \`${tableName}\`\n--\n\n`;
+      for (const row of rows) {
+        const columns = Object.keys(row)
+          .map((col) => `\`${col}\``)
+          .join(", ");
+        const values = Object.values(row)
+          .map((val) => {
+            if (val === null) return "NULL";
+            if (typeof val === "number") return val;
+            return `'${val.toString().replace(/'/g, "''")}'`;
+          })
+          .join(", ");
+        sqlDump += `INSERT INTO \`${tableName}\` (${columns}) VALUES (${values});\n`;
+      }
+      sqlDump += `\n`;
+    }
+  }
+
+  fs.writeFileSync(outputFile, sqlDump);
+}
+
+async function sendEmailWithAttachment(mailOptions) {
+  const nodemailer = require("nodemailer");
+  const transporter = nodemailer.createTransport({
+    host: "maktababadan.ir",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_NAME,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log("Error sending email:", error);
+    }
+    set_data_in_database(
+      "INSERT INTO `backup`(`backups`) VALUES (CURRENT_TIMESTAMP)"
+    );
+  });
+}
+
+const calculateDaysPassed = (inputDate) => {
+  const givenDate = new Date(inputDate);
+  const today = new Date();
+
+  givenDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const diffTime = today - givenDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+};
+async function getBackUp() {
+  let last_backup = await (
+    await set_data_in_database(
+      "SELECT * FROM `backup` ORDER BY id DESC LIMIT 1;"
+    )
+  )[0];
+  if (Math.abs(calculateDaysPassed(last_backup.backups)) < 22) return;
+  const dbConfig = {
+    database: hostDatabase.database,
+    outputFile: "backup.sql",
+  };
+
+  const mailOptions = {
+    from: "info@backup.com",
+    to: "maktabalzahra200@gmail.com",
+    subject: "Database Backup",
+    text: "Backup is attached.",
+    attachments: [
+      {
+        filename: "backup.sql",
+        path: "./backup.sql",
+      },
+    ],
+  };
+
+  await backupDatabaseToSQL(dbConfig);
+  await sendEmailWithAttachment(mailOptions);
+}
 
 function validateUsernameOrPassword(inputString, isTruePersion = false) {
   let regex = /^[a-zA-Z0-9]+$/;
@@ -608,6 +710,10 @@ app.post("*/search", [], async (req, res) => {
             object[type] = item[type];
           } else return;
           base.forEach((bas) => {
+            if (typeof decryptMessage(item[bas]) !== "string") {
+              console.error(item[key], globalKeys);
+              console.error(1);
+            }
             item[bas] = String(decryptMessage(item[bas]));
             object[bas] = item[bas];
           });
@@ -621,6 +727,11 @@ app.post("*/search", [], async (req, res) => {
           for (let inde = 0; inde < keys.length; inde++) {
             const key = keys[inde];
             if (key !== "id" && item[key] !== null) {
+              if (typeof decryptMessage(item[key]) !== "string") {
+                console.error(item[key], globalKeys);
+                console.error(globalKeys);
+                console.error(2);
+              }
               item[key] = decryptMessage(item[key]);
             }
           }
@@ -778,6 +889,10 @@ app.post("*/search", [], async (req, res) => {
             for (let index = 0; index < members_ress.length; index++) {
               const item = members_ress[index];
               let object = {};
+              if (typeof decryptMessage(item[type]) !== "string") {
+                console.error(item[key], globalKeys);
+                console.error(1);
+              }
               item[type] = String(decryptMessage(item[type]));
               if (String(item[type]).includes(textSearch)) {
                 object[type] = item[type];
@@ -798,6 +913,10 @@ app.post("*/search", [], async (req, res) => {
               let object = {};
               Object.keys(item).find((key) => {
                 if (key !== "id" && item[key] !== null) {
+                  if (typeof decryptMessage(item[key]) !== "string") {
+                    console.error(item[key], globalKeys);
+                    console.error(1);
+                  }
                   item[key] = String(decryptMessage(item[key]));
                   if (String(item[key]).includes(textSearch)) {
                     object[key] = item[key];
@@ -1353,7 +1472,36 @@ app.get("*/report", async (req, res, next) => {
     res.status(500).send("Server Error");
   }
 });
-
+app.get("*/getUpdate", async (req, res, next) => {
+  try {
+    let user_res;
+    if (req.cookies.user) {
+      let cookieUser = JSON.parse(req.cookies.user);
+      user_res = await (
+        await set_data_in_database(
+          `SELECT * FROM users WHERE username=?`,
+          cookieUser.username
+        )
+      )[0];
+    }
+    if (user_res)
+      if (!verifyToken(JSON.parse(req.cookies.user).key, user_res.user_key)) {
+        res.cookie("user", "");
+        res.cookie("users", "");
+        user_res = "";
+      }
+    if (user_res) {
+      await getBackUp();
+    } else {
+      let path = "pages/login.html";
+      const data = fs.readFileSync(path, "utf8");
+      res.send(data);
+    }
+  } catch (err) {
+    next();
+    res.status(500).send("Server Error");
+  }
+});
 app.get("*", async (req, res, next) => {
   try {
     let user_res;
