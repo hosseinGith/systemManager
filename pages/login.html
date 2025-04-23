@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="text-[#000] bg-[#fff]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/assets/image/data.png" />
+    <link rel="manifest" href="/scripts/manifest.json" />
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="stylesheet" href="/styles/swiper.min.css" />
+    <script src="/scripts/sweetAlert.js"></script>
+
+    <meta name="apple-mobile-web-app-status-bar" content="#fff" />
+    <link rel="preload" href="/styles/main.css" as="style" />
+    <meta name="theme-color" content="#fff" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <title>فرم ها</title>
+  </head>
+  <body>
+    <div
+      class="loading opacity-0 pointer-events-none transition-all fixed left-0 top-0 w-screen h-screen bg-[#0000002d] flex flex-col items-center justify-center"
+    >
+      <div
+        class="animate-spin border-8 border-[transparent] border-t-[#17bdff] rounded-full w-[50px] h-[50px]"
+      ></div>
+    </div>
+    <div
+      id="container"
+      class="window mt-[80px] max-w-[700px] w-[90%] mx-auto overflow-auto active md:flex items-center shadow-lg justify-center p-8"
+    >
+      <form
+        onsubmit="submitForm(event)"
+        class="py-4 flex flex-col gap-8 w-full space-y-4"
+      >
+        <div>
+          <h2>برای ورود فیلد های زیر را کامل کنید</h2>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <input
+              type="text"
+              class="inputStyle border-b-2 border-lowIconColor bg-[transparent]"
+              autocomplete="off"
+              placeholder="نام کاربری"
+              name="username"
+              id="username"
+            />
+          </div>
+
+          <div>
+            <input
+              type="password"
+              class="inputStyle border-b-2 border-lowIconColor bg-[transparent]"
+              autocomplete="off"
+              placeholder="پسورد"
+              name="password"
+              id="password"
+            />
+          </div>
+        </div>
+        <button class="font-bold button">ورود</button>
+      </form>
+    </div>
+    <script>
+      const loading = document.querySelector(".loading");
+      let isSignUp = false;
+
+      async function submitForm(e) {
+        e.preventDefault();
+        loading.classList.remove("opacity-0");
+        loading.classList.remove("pointer-events-none");
+
+        let data = {
+          password: document.querySelector("input[name='password']").value,
+          username: document.querySelector("input[name='username']").value,
+          public_name: isSignUp
+            ? document.querySelector("input[name='public_name']").value
+            : "",
+        };
+        try {
+          let res = await fetch(isSignUp ? "/signup" : "/signin", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          let result = await res.json();
+
+          if (res.ok) {
+            Swal.fire({
+              icon: "success",
+              text: result.message,
+              confirmButtonText: "تایید",
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: result.message,
+              confirmButtonText: "تایید",
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            text: "مشکل در سیستم.",
+            confirmButtonText: "تایید",
+          }).then(() => {
+            location.reload();
+          });
+        }
+        loading.classList.add("opacity-0");
+        loading.classList.add("pointer-events-none");
+      }
+      function checkContainerHeight() {
+        if (
+          document.querySelector("#container form").scrollHeight + 20 >
+          innerHeight
+        ) {
+          document.querySelector("#container").style.alignItems = "start";
+        } else {
+          document.querySelector("#container").style.alignItems = "";
+        }
+      }
+      checkContainerHeight();
+      window.onresize = () => {
+        checkContainerHeight();
+      };
+    </script>
+  </body>
+</html>

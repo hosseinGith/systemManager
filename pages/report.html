@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/assets/image/data.png" />
+    <link rel="manifest" href="/scripts/manifest.json" />
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="stylesheet" href="/styles/swiper.min.css" />
+    <script src="/scripts/sweetAlert.js"></script>
+    <script src="/scripts/chart.js"></script>
+    <script src="/scripts/moment-jalaali.min.js"></script>
+
+    <meta name="apple-mobile-web-app-status-bar" content="#fff" />
+    <link rel="preload" href="/styles/main.css" as="style" />
+    <meta name="theme-color" content="#fff" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <title>گزارش</title>
+  </head>
+  <body>
+    <div
+      class="loading opacity-0 pointer-events-none transition-all fixed left-0 top-0 w-screen h-screen bg-[#0000002d] flex flex-col items-center justify-center"
+    >
+      <div
+        class="animate-spin border-8 border-[transparent] border-t-[#17bdff] rounded-full w-[50px] h-[50px]"
+      ></div>
+    </div>
+    <header class="border-b-2 border-[#eee]">
+      <section>
+        <div class="container">
+          <h1 class="text-center pt-8 text-2xl">اضافه کردن ردیف جدید</h1>
+        </div>
+      </section>
+      <section>
+        <div class="container relative py-8 text-start space-y-4">
+          <button id="showMenu" class="button flex items-center mx-0">
+            منو
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-9"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          </button>
+          <ul
+            id="menu"
+            style="max-height: 0px; width: 200px"
+            class="opacity-0 transition-[opacity_max-height] overflow-hidden overflow-x-hidden text-nowrap pointer-events-none duration-700 flex flex-col absolute right-[110px] top-[68px] border-2 border-[#eee] bg-lightMainColor shadow-md"
+          >
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/"
+                class="font-bold p-4"
+                >صفحه اصلی</a
+              >
+            </li>
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/search"
+                class="font-bold p-4"
+                >جستجو</a
+              >
+            </li>
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/add-property"
+                class="font-bold p-4"
+                >اضافه کردن ردیف جدید</a
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+    </header>
+    <main class="sm:pt-[100px] pt-[40px]">
+      <section>
+        <div
+          id="contOfCharts"
+          class="container text-center max-w-[700px] space-y-5 w-[90%] rounded-xl shadow-md px-4 py-8"
+        ></div>
+      </section>
+    </main>
+    <script src="/scripts/main.js"></script>
+    <script>
+      (async function () {
+        let columns = await (await fetch("/columns")).json();
+        columns = columns.columns;
+        let allInfo = await (
+          await fetch("/getMemebrsData/chart", { method: "POST" })
+        ).json();
+        Object.keys(allInfo).forEach((key) => {
+          let title = document.createElement("h1");
+          title.className = "text-lg sm:text-2xl";
+          let canvas = document.createElement("canvas");
+          let allRow = [];
+          let allCol = {};
+          allInfo[key].forEach((item) => {
+            if (typeof item !== "string") return;
+            if (!allRow.includes(item)) {
+              if (key === "birthDayDate") {
+                const birthDate = moment(item, "jYYYY/jMM/jDD");
+                const today = moment();
+
+                const years = today.diff(birthDate, "years") + " سال";
+                const months = today.diff(birthDate, "months") + " ماه";
+                const days = today.diff(birthDate, "days") + " روز";
+                let property = years;
+                if (today.diff(birthDate, "years") == 0) property = months;
+                if (
+                  today.diff(birthDate, "months") == 0 &&
+                  today.diff(birthDate, "years") == 0
+                )
+                  property = days;
+                if (!allRow.includes(property)) allRow.push(property);
+              } else allRow.push(item);
+            }
+            if (key === "birthDayDate") {
+              allCol[allRow[allRow.length - 1]] = allCol[
+                allRow[allRow.length - 1]
+              ]
+                ? allCol[allRow[allRow.length - 1]] + 1
+                : 1;
+            } else allCol[item] = allCol[item] ? allCol[item] + 1 : 1;
+
+          });
+          document.querySelector("#contOfCharts").appendChild(title);
+          document.querySelector("#contOfCharts").appendChild(canvas);
+
+          let label = "";
+          columns.forEach((item) => {
+            if (typeof item.value === "string")
+              item.value = JSON.parse(item.value);
+            if (item.value[1] === key) label = item.value[0];
+          });
+          if (label === "تاریخ تولد") label = "سن";
+          title.textContent = label;
+          new Chart(canvas.getContext("2d"), {
+            type: "bar",
+            data: {
+              labels: allRow,
+              datasets: [
+                {
+                  label: label,
+                  data: Object.values(allCol),
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  ticks: {
+                    stepSize: 1,
+                  },
+                },
+              },
+              plugins: {
+                zoom: {
+                  pan: {
+                    enabled: true,
+                    scaleMode: "y",
+                    overScaleMode: "y",
+                    threshold: 1,
+                  },
+                },
+              },
+            },
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

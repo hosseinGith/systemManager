@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/assets/image/data.png" />
+    <link rel="manifest" href="/scripts/manifest.json" />
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="apple-touch-icon" href="/assets/image/data.png" />
+    <link rel="stylesheet" href="/styles/swiper.min.css" />
+    <script src="/scripts/sweetAlert.js"></script>
+    <script src="/scripts/moment-jalaali.min.js"></script>
+
+    <meta name="apple-mobile-web-app-status-bar" content="#fff" />
+    <link rel="preload" href="/styles/main.css" as="style" />
+    <meta name="theme-color" content="#fff" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <title>جستجو</title>
+  </head>
+  <body>
+    <div
+      class="loading opacity-0 pointer-events-none transition-all fixed left-0 top-0 w-screen h-screen bg-[#0000002d] flex flex-col items-center justify-center"
+    >
+      <div
+        class="animate-spin border-8 border-[transparent] border-t-[#17bdff] rounded-full w-[50px] h-[50px]"
+      ></div>
+    </div>
+    <header class="border-b-2 border-[#eee]">
+      <section>
+        <div class="container">
+          <h1 class="text-center pt-8 text-2xl">جستجو</h1>
+        </div>
+      </section>
+      <section>
+        <div class="container relative py-8 text-start space-y-4">
+          <button id="showMenu" class="button flex items-center mx-0">
+            منو
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-9"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          </button>
+          <ul
+            id="menu"
+            style="max-height: 0px; width: 200px"
+            class="opacity-0 transition-[opacity_max-height] overflow-hidden overflow-x-hidden text-nowrap pointer-events-none duration-700 flex flex-col absolute right-[110px] top-[68px] border-2 border-[#eee] bg-lightMainColor shadow-md"
+          >
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/"
+                class="font-bold p-4"
+                >صفحه اصلی</a
+              >
+            </li>
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/add-property"
+                class="font-bold p-4"
+                >اضافه کردن ردیف جدید</a
+              >
+            </li>
+            <li>
+              <a
+                class="block p-4 transition-all hover:bg-[#ececec]"
+                href="/report"
+                class="font-bold p-4"
+                >گزارش</a
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <form
+          class="container flex flex-col items-center justify-center gap-4 py-2"
+          onsubmit="submitFormSearch(event,this)"
+        >
+          <div class="max-w-[450px] mx-auto space-y-2 px-4 overflow-hidden">
+            <label for="" class="text-sm flex gap-4 text-nowrap items-center">
+              نوع جستجو
+              <select
+                name="type"
+                class="max-w-full inputStyle py-1 text-ellipsis overflow-hidden border-2"
+                style="border-color: #bbb"
+              >
+                <option value="all">همه</option>
+                <option value="firstName">نام</option>
+                <option value="lastName">نام خانوادگی</option>
+                <option value="fatherName">نام پدر</option>
+                <option value="nationalId">کد ملی</option>
+                <option value="birthDayDate">تاریخ تولد</option>
+                <option value="educationalBase">پایه تحصیلی</option>
+                <option value="teacherName">مربی</option>
+                <option value="schoolSift">شیفت</option>
+                <option value="lastYearGPA">معدل سال گذشته</option>
+                <option value="age">سن</option>
+              </select>
+            </label>
+            <div class="flex w-full">
+              <input
+                placeholder="مقدار خالی = نمایش همه"
+                class="inputStyle text-sm border-2 py-1 w-full"
+                type="text"
+                name="searchValue"
+                id=""
+                style="border-color: #bbb"
+              />
+              <button class="button">جستجو</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </header>
+    <main class="">
+      <section>
+        <ul
+          class="container membersCont text-center  w-[90%] rounded-xl shadow-md px-4 py-8 grid  xl:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-8 "
+        ></ul>
+      </section>
+    </main>
+    <footer style="padding-top: 40px"></footer>
+    <script src="/scripts/main.js"></script>
+    <script>
+      const membersCont = document.querySelector(".membersCont");
+      const loading = document.querySelector(".loading");
+      const type = document.querySelector("select[name='type']");
+      const searchValue = document.querySelector('[name="searchValue"]');
+
+      let allDocument = [];
+      let columns;
+      let oldSearch = "";
+      let newStart = 0;
+      (async () => {
+        columns = await (await fetch("/columns")).json();
+        columns = columns.columns;
+      })();
+      function submitFormSearch(e, form) {
+        e.preventDefault();
+        membersCont.textContent = "";
+        search(searchValue.value.trim());
+        newStart = null;
+        start = 0;
+      }
+      async function search(val, start = 0) {
+        loading.classList.remove("opacity-0");
+        loading.classList.remove("pointer-events-none");
+        oldSearch = val;
+        try {
+          let res = await (
+            await fetch("/search", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify({
+                textSearch: val,
+                start: start,
+                type: type.value,
+              }),
+            })
+          ).json();
+
+          if (!columns) {
+            columns = await (await fetch("/columns")).json();
+            columns = columns.columns;
+          }
+          if (res.start) {
+            newStart = res.start;
+          }
+          allDocument = res.data;
+          if (allDocument.length === 0) {
+            Swal.fire({
+              icon: "info",
+              text:
+                start === 0 ? "موردی یافت نشد." : "موارد بیشتری یافت نشدند.",
+              confirmButtonText: "تایید",
+            });
+          }
+
+          for (let index = 0; index < allDocument.length; index++) {
+            try {
+              const item = allDocument[index];
+
+              const birthDate = moment(item.birthDayDate, "jYYYY/jMM/jDD"); // تاریخ تولد شمسی
+              const today = moment(); // تاریخ امروز شمسی
+
+              const years = today.diff(birthDate, "years");
+              birthDate.add(years, "years"); // اضافه کردن سال‌ها برای محاسبه باقی‌مانده ماه‌ها
+
+              const months = today.diff(birthDate, "months");
+              birthDate.add(months, "months"); // اضافه کردن ماه‌ها برای محاسبه باقی‌مانده روزها
+              let days = today.diff(birthDate, "days");
+              item["age"] = `${years ? years + " سال  " : ""} ${
+                months ? (years ? " و " : "") + months + " ماه  " : ""
+              } ${days > 0 ? (months ? " و " : "") + days + " روز" : ""} `;
+              if (!item["age"].trim()) item["age"] = "تاریخ تولد نا معتبر";
+              createLi(item, columns);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        } catch (e) {
+          Swal.fire({
+            icon: "error",
+            text: "مشکل در سیستم.",
+            confirmButtonText: "تایید",
+          });
+          console.log(e);
+        }
+        loading.classList.add("opacity-0");
+        loading.classList.add("pointer-events-none");
+      }
+      function createLi(data, columns) {
+        let fragment = document.createDocumentFragment();
+        let li = document.createElement("a");
+        li.href = "/member/" + data.id;
+        li.className = "border-8";
+        li.style.padding = "10px";
+        li.style.display = "flex";
+        li.style.borderColor = "#32b85e";
+        li.style.flexDirection = "column";
+        li.style.gap = "10px";
+
+        let idDiv = document.createElement("div");
+        idDiv.className = "id";
+        idDiv.style.display = "flex";
+        idDiv.style.justifyContent = "space-between";
+        idDiv.style.width = "100%";
+        idDiv.innerHTML = `id: <span>${data.id}</span>`;
+        if (searchValue.value == data.id) {
+          idDiv.querySelector("span").style.color = "red";
+          idDiv.style.fontWeight = "bold";
+        }
+        li.appendChild(idDiv);
+
+        const createSection = (title, className) => {
+          let section = document.createElement("div");
+          section.className = className;
+          section.style.gap = "5px";
+          section.style.border = "2px solid #bbb";
+          section.style.width = "100%";
+
+          let header = document.createElement("h1");
+          header.className = "p-2";
+          header.textContent = title;
+          header.style.background = "#2f569d";
+          header.style.color = "#fff";
+          header.style.width = "50%";
+          header.style.margin = "0 auto";
+          header.style.borderRadius = "0 0 20px 20px";
+
+          let content = document.createElement("div");
+          content.className = "grid grid-cols-1";
+
+          section.appendChild(header);
+          section.appendChild(content);
+
+          return section;
+        };
+
+        let sections = {};
+        let newColumns = [];
+        Object.keys(data).forEach((key) => {
+          let findValue = columns.find((col) => {
+            if (typeof col.value === "string")
+              col.value = JSON.parse(col.value);
+            if (col.value[1] === key) return col;
+          });
+          if (findValue) {
+            newColumns.push(findValue);
+            sections[findValue.value[2].replaceAll(" ", "")] = createSection(
+              findValue.value[2],
+              findValue.value[2].replaceAll(" ", "")
+            );
+          }
+        });
+        Object.values(sections).forEach((section) => li.appendChild(section));
+        newColumns.forEach((item) => {
+          let targetSection = sections[item.value[2].replaceAll(" ", "")];
+          if (targetSection) {
+            let contentDiv = targetSection.querySelector("div");
+            let fieldDiv = document.createElement("div");
+            fieldDiv.className = `grid grid-cols-1 px-2 gap-4 w-full`;
+            fieldDiv.style.textAlign = "start";
+
+            let valueDiv = document.createElement("div");
+            valueDiv.className = `flex ${item.value[1]} justify-between  p-1`;
+
+            let label = document.createElement("span");
+            label.style.fontWeight = "bold";
+
+            label.textContent = `${item.value[0].replaceAll(":", "")}:`;
+
+            let valueSpan = document.createElement("p");
+            valueSpan.classList.add("sm:text-[17px]");
+            valueSpan.classList.add("text-[13px]");
+
+            valueDiv.appendChild(label);
+            valueDiv.appendChild(valueSpan);
+            fieldDiv.appendChild(valueDiv);
+            contentDiv.appendChild(fieldDiv);
+          }
+        });
+        for (const key in data) {
+          let section = li.querySelector(`.${key} p`);
+          if (section) {
+            data[key] = data[key].split(searchValue.value);
+            let enc = encodeURIComponent(
+              "[,__@@__)شسی*!)_&, 654654__@@__)*!)_&]شسیشسی"
+            );
+            data[key] = data[key].join(enc + searchValue.value + enc);
+            data[key] = data[key].split(enc);
+
+            data[key].forEach((item, index) => {
+              let valueSpan = document.createElement("span");
+              if (
+                String(searchValue.value) == item &&
+                (type.value === key || type.value === "all")
+              ) {
+                valueSpan.style.color = "red";
+              }
+              valueSpan.textContent = item;
+              section.appendChild(valueSpan);
+            });
+          }
+        }
+
+        fragment.appendChild(li);
+
+        membersCont.appendChild(fragment);
+      }
+      let isLoading,
+        start,
+        stepPlus = 100;
+      window.onscroll = async function () {
+        if (allDocument.length < stepPlus - 1 || type.value === "id") return;
+        let B = document.body,
+          DE = document.documentElement,
+          O = Math.min(B.clientHeight, DE.clientHeight);
+
+        if (!O) {
+          O = B.clientHeight;
+        }
+
+        let S = Math.max(B.scrollTop, DE.scrollTop),
+          C = Math.max(B.scrollHeight, DE.scrollHeight);
+        if (
+          (O + S == document.querySelector("footer").offsetTop ||
+            O + S >= document.querySelector("footer").offsetTop - 100) &&
+          !isLoading
+        ) {
+          if (!start) {
+            start = 0;
+          }
+          if (newStart) {
+            start = newStart;
+            newStart = null;
+          } else start += stepPlus;
+          isLoading = true;
+          await search(searchValue.value.trim(), start);
+          isLoading = false;
+        }
+      };
+    </script>
+  </body>
+</html>
