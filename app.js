@@ -1504,7 +1504,7 @@ app.get("*/getUpdate", async (req, res, next) => {
         );
       else
         res.send(
-          "<div style='text-aligh:center;padding:10px;background:green;color:white'>faild " +
+          "<div style='text-aligh:center;padding:10px;background:red;color:white'>faild " +
             result +
             " days</div>"
         );
