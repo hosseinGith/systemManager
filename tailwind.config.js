@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./**/*.{html,css}"],
-  darkMode: "class",
+
   theme: {
     extend: {},
     colors: {
@@ -25,3 +25,7 @@ module.exports = {
   },
   plugins: [],
 };
+
+// fixed run tailwind
+//  npm uninstall tailwindcss
+//  npm install -D tailwindcss@3.4.1
