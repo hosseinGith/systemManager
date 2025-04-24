@@ -13,7 +13,6 @@
         --mainColor2: "#45b5ff";
         --mainTextColor: "#000";
     }
-
     @font-face {
         font-family: iranYekan;
         src: url('../assets/fonts/iranyekan-regular.woff2') format('woff2'),
@@ -55,4 +54,22 @@
     .slowMotionAnimateClose.active{
         @apply max-h-0 opacity-0 pointer-events-none block
     }
+
+    .window {
+        @apply opacity-0 pointer-events-none transition-all fixed z-10 left-0 top-0 w-full h-full bg-[rgba(0,_0,_0,_.4)] items-center justify-center flex
+    }
+    .window:not(.active){
+        @apply delay-150
+    }
+    .window >div{
+        @apply transition-all 
+    }
+
+    .window.active {
+        @apply  opacity-100 pointer-events-auto 
+    }
+    .window.active>div {
+        @apply translate-x-0  delay-150
+    }
+    
 }
