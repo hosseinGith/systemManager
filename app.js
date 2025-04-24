@@ -3,7 +3,6 @@ const fs = require("fs");
 const mysql = require("mysql2");
 const { body } = require("express-validator");
 const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
 require("dotenv").config();
 
 const http = require("http");
@@ -126,15 +125,7 @@ const limiter = rateLimit({
   message: "لطفا چند ثانیه دیگر تلاش کنید.",
 });
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        connectSrc: ["'self'", "ws://projects.miradig.ir"],
-      },
-    },
-  })
-);
+
 app.use(cookieParser());
 
 app.use((req, res, next) => {
@@ -153,19 +144,14 @@ app.use(express.static("public"));
 app.use(express.json());
 
 // cookie
-app.use(helmet());
+
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(limiter);
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "connect-src 'self' ws://localhost:8080"
-  );
-  next();
-});
+
+
 async function backupDatabaseToSQL({ database, outputFile }) {
   if (!fs) fs = require("fs");
   console.log(1);
@@ -1519,6 +1505,7 @@ app.get("*/getUpdate", async (req, res, next) => {
   }
 });
 app.get("*", async (req, res, next) => {
+  
   try {
     let user_res;
     if (req.cookies.user) {
