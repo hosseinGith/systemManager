@@ -129,6 +129,3 @@ jalaliDatepicker.startWatch({
     };
   },
 });
-document.querySelector(".window").onclick = function (e) {
-  if (this === e.target) this.classList.remove("active");
-};

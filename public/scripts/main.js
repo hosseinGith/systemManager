@@ -43,7 +43,7 @@ async function deleteUser(id) {
 }
 function showOther(select, condition) {
   if (condition) {
-  select.nextElementSibling.type = "text";
+    select.nextElementSibling.type = "text";
   } else {
     select.nextElementSibling.type = "hidden";
   }
@@ -122,4 +122,8 @@ window.onclick = (e) => {
   }
 };
 
-    
+document.querySelectorAll(".window").forEach((item) => {
+  item.onclick = function (e) {
+    if (this === e.target) this.classList.remove("active");
+  };
+});
