@@ -228,14 +228,11 @@ const calculateDaysPassed = (inputDate) => {
   return diffDays;
 };
 async function getBackUp() {
-  console.log(1);
-  let last_backup = await (
-    await set_data_in_database(
-      "SELECT * FROM `backup` ORDER BY id DESC LIMIT 1;"
-    )
-  )[0];
-  if (Math.abs(calculateDaysPassed(last_backup.backups)) < 22)
-    return calculateDaysPassed(last_backup.backups);
+  // let last_backup = await (
+  //   await set_data_in_database(
+  //     "SELECT * FROM `backup` ORDER BY id DESC LIMIT 1;"
+  //   )
+  // )[0];
   const dbConfig = {
     database: hostDatabase.database,
     outputFile: "backup.sql",
@@ -253,7 +250,6 @@ async function getBackUp() {
       },
     ],
   };
-  console.log(1);
   await backupDatabaseToSQL(dbConfig);
   await sendEmailWithAttachment(mailOptions);
   return true;
