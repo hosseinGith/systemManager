@@ -1,7 +1,98 @@
-const sectionTitle = document.querySelectorAll(".sectionTitle");
-const menu = document.querySelector("#menu");
-const showMenu = document.querySelector("#showMenu");
-const booksArray = {
+import "dotenv/config";
+import express from "express";
+import fs from "fs";
+import mysql from "mysql2";
+import { body } from "express-validator";
+import rateLimit from "express-rate-limit";
+import http from "http";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+import moment from "moment-jalaali";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import cookieParser from "cookie-parser";
+import cookie from "cookie";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const globalPass = process.env.GLOBAL_PASS;
+const globalKeys = [process.env.GLOBAL_KEY1, process.env.GLOBAL_KEY2];
+
+const { dbhost, dbuser, dbdatabase, dbpassword } = process.env;
+
+const hostDatabase = {
+  host: dbhost,
+  user: dbuser,
+  database: dbdatabase,
+  password: dbpassword,
+};
+
+const settings = (app) => {
+  app.set("trust proxy", 1);
+  app.use((req, res, next) => {
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, private"
+    );
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    next();
+  });
+  // express
+  app.use(express.static("public"));
+  app.use(express.json());
+
+  // cookie
+  app.use(cookieParser());
+
+  app.use(express.urlencoded({ extended: true }));
+
+  // const limiter = rateLimit({
+  //   windowMs: 4 * 1000,
+  //   max: 5,
+  //   message: "لطفا چند ثانیه دیگر تلاش کنید.",
+  // });
+
+  // app.use(limiter);
+};
+let faDate = {
+  days: {
+    1: "یک",
+    2: "دو",
+    3: "سه",
+    4: "چهار",
+    5: "پنج",
+    6: "شش",
+    7: "هفت",
+    8: "هشت",
+    9: "نه",
+    10: "ده",
+    11: "یازده",
+    12: "دوازده",
+    13: "سیزده",
+    14: "چهارده",
+    15: "پانزده",
+    16: "شانزده",
+    17: "هفده",
+    18: "هجده",
+    19: "نوزده",
+    20: "بیست",
+    21: "بیست و یک",
+    22: "بیست و دو",
+    23: "بیست و سه",
+    24: "بیست و چهار",
+    25: "بیست و پنج",
+    26: "بیست و شش",
+    27: "بیست و هفت",
+    28: "بیست و هشت",
+    29: "بیست و نه",
+    30: "سی",
+    31: "سی و یک",
+  },
+};
+const books = {
   اول: [
     "فارسی",
     "ریاضی",
@@ -232,137 +323,25 @@ const booksArray = {
   },
 };
 
-async function deleteUser(id) {
-  loading.classList.remove("opacity-0");
-  loading.classList.remove("pointer-events-none");
-  try {
-    let res = await (
-      await fetch("/delete", {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          id: id,
-          nationalId: document.querySelector('[name="nationalId"]').value,
-        }),
-      })
-    ).json();
-    if (res.status) {
-      Swal.fire({
-        icon: "success",
-        text: "کاربر حذف شد",
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      }).then(() => {
-        location = "/search";
-      });
-    } else
-      Swal.fire({
-        icon: "error",
-        text: res.message,
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      });
-  } catch (e) {
-    Swal.fire({
-      icon: "error",
-      text: "مشکل در سیستم.",
-      confirmButtonText: "تایید",
-      customClass: {
-        confirmButton: "button",
-      },
-    });
-    console.log(e);
-  }
-  loading.classList.add("opacity-0");
-  loading.classList.add("pointer-events-none");
-}
-function showOther(element, condition) {
-  if (condition) {
-    element.type = "text";
-  } else {
-    element.type = "hidden";
-  }
-}
-
-const isValidJalaliDate = (dateString) => {
-  const regex = /^\d{4}\/\d{2}\/\d{2}$/;
-  if (!regex.test(dateString)) return false;
-
-  const date = moment(dateString, "jYYYY/jMM/jDD", true);
-  if (!date.isValid()) return false;
-
-  const [year, month, day] = dateString.split("/").map(Number);
-
-  if (month < 1 || month > 12) return false;
-
-  const daysInMonth = moment.jDaysInMonth(year, month);
-  if (day < 1 || day > daysInMonth) return false;
-
-  return true;
+export {
+  mysql,
+  bcrypt,
+  jwt,
+  nodemailer,
+  faDate,
+  cookie,
+  crypto,
+  fs,
+  http,
+  __dirname,
+  globalPass,
+  globalKeys,
+  hostDatabase,
+  books,
+  body,
+  rateLimit,
+  moment,
+  express,
+  cookieParser,
+  settings,
 };
-
-Array.from(sectionTitle).forEach((item) => {
-  item.nextElementSibling
-    .querySelectorAll(
-      "input:not([type='hidden']),select:not([type='hidden']),textarea:not([type='hidden'])"
-    )
-    .forEach((input) => {
-      input.addEventListener("focus", () => {
-        if (item.parentElement.children[1].style.height) {
-          item.parentElement.children[1].style.height = "";
-          item.style.background = "#2f569d";
-          item.style.color = "#fff";
-          input.scrollIntoView({ behavior: true });
-        }
-      });
-    });
-  item.addEventListener("click", () => {
-    if (item.parentElement.children[1].style.height) {
-      item.parentElement.children[1].style.height = "";
-      item.style.background = "#2f569d";
-      item.style.color = "#fff";
-    } else {
-      item.parentElement.children[1].style.height = "0px";
-      item.style.background = "#000";
-      item.style.color = "#fff";
-    }
-  });
-});
-if (showMenu) {
-  showMenu.addEventListener("click", () => {
-    if (menu.style.maxHeight == "0px") {
-      menu.style = `max-height: 200px;width: 200px;`;
-      menu.classList.remove("pointer-events-none");
-      menu.classList.remove("opacity-0");
-      menu.classList.remove("overflow-hidden");
-      menu.classList.add("overflow-y-auto");
-    } else {
-      menu.style = `max-height: 0;width: 200px;`;
-      menu.classList.add("pointer-events-none");
-      menu.classList.add("overflow-hidden");
-      menu.classList.add("opacity-0");
-      menu.classList.remove("overflow-y-auto");
-    }
-  });
-}
-window.onclick = (e) => {
-  if (showMenu && !e.target.closest("#showMenu")) {
-    if (menu.style.maxHeight != "0px") {
-      menu.style = `max-height: 0;width: 200px;`;
-      menu.classList.add("pointer-events-none");
-      menu.classList.add("overflow-hidden");
-      menu.classList.add("opacity-0");
-      menu.classList.remove("overflow-y-auto");
-    }
-  }
-};
-
-document.querySelectorAll(".window").forEach((item) => {
-  item.onclick = function (e) {
-    if (this === e.target) this.classList.remove("active");
-  };
-});

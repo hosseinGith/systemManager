@@ -40,6 +40,7 @@
 
     body {
         font-family: iranYekan, vazir, iransans;
+        @apply sm:text-[15px] text-sm
     }
 
     .button {
@@ -71,5 +72,7 @@
     .window.active>div {
         @apply translate-x-0  delay-150
     }
-    
+    .input{
+        @apply border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]
+    }
 }

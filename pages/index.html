@@ -98,7 +98,7 @@
         </div>
       </section>
     </header>
-    <main class="sm:pt-[100px] pt-[40px]">
+    <main class="">
       <section>
         <form
           onsubmit="submitForm(event)"
@@ -126,7 +126,7 @@
                 مشخصات فردی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام:</span>
@@ -234,32 +234,6 @@
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">پایه تحصیلی:</span>
-                  <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="text"
-                    name="educationalBase"
-                  >
-                    <option value="">انتخاب کنید...</option>
-                    <option value="اول">اول</option>
-                    <option value="دوم">دوم</option>
-                    <option value="سوم">سوم</option>
-                    <option value="چهارم">چهارم</option>
-                    <option value="پنجم">پنجم</option>
-                    <option value="ششم">ششم</option>
-                    <option value="هفتم">هفتم</option>
-                    <option value="هشتم">هشتم</option>
-                    <option value="نهم">نهم</option>
-                    <option value="دهم">دهم</option>
-                    <option value="یازدهم">یازدهم</option>
-                    <option value="دوازدهم">دوازدهم</option>
-                    <option value="دانشجو">دانشجو</option>
-                    <option value="طلبه">طلبه</option>
-                  </select>
-                </div>
-
-                <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">مربی:</span>
                   <input
                     required=""
@@ -291,20 +265,6 @@
                   />
                 </div>
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">میزان استفاده از موبایل:</span>
-                  <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="text"
-                    name="phoneUseLength"
-                  >
-                    <option value="">انتخاب کنید...</option>
-                    <option value="زیاد">زیاد</option>
-                    <option value="متوسط">متوسط</option>
-                    <option value="کم">کم</option>
-                  </select>
-                </div>
-                <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">موارد استفاده از موبایل:</span>
                   <select
                     required=""
@@ -313,16 +273,13 @@
                     name="phoneUseAbout"
                   >
                     <option value="">انتخاب کنید...</option>
-                    <option value="بازی .  زیاد">بازی . زیاد</option>
-                    <option value="بازی .  متوسط">بازی . متوسط</option>
-                    <option value="بازی .  کم">بازی . کم</option>
-                    <option value="ادیت .  زیاد">ادیت . زیاد</option>
-                    <option value="ادیت .  متوسط">ادیت . متوسط</option>
-                    <option value="ادیت .  کم">ادیت . کم</option>
+                    <option value="بازی">بازی</option>
+                    <option value="ادیت">ادیت</option>
                   </select>
                 </div>
+
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">نام بازی های مورد علاقه:</span>
+                  <span style="font-size: 13px">1 نام بازی مورد علاقه:</span>
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
@@ -331,20 +288,75 @@
                   />
                 </div>
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px"
-                    >نام برنامه های مورد علاقه:</span
-                  >
+                  <span style="font-size: 13px">2 نام بازی مورد علاقه:</span>
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
+                    name="favoriteGames2"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام بازی مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    name="favoriteGames3"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام بازی مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    name="favoriteGames4"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">1 نام برنامه مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
                     dir="auto"
                     name="favoriteApps"
                   />
                 </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">2 نام برنامه مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps2"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام برنامه مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps3"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام برنامه مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps4"
+                  />
+                </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">شبکه های اجتماعی:</span>
+                  <span style="font-size: 13px">میزان استفاده:</span>
                   <select
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
@@ -379,7 +391,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="webSiteOrLearnAbout"
                   />
@@ -401,11 +413,41 @@
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">نام فیلم های مورد علاقه:</span>
+                  <span style="font-size: 13px">1 نام فیلم مورد علاقه:</span>
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">2 نام فیلم مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام فیلم مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام فیلم مورد علاقه:</span>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
                     dir="auto"
                     name="favoriteMovies"
                   />
@@ -432,7 +474,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="FilmStyleAndGenre"
                   />
@@ -445,7 +487,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="favoriteSignal"
                   />
@@ -458,7 +500,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="watchingHabits"
                   />
@@ -471,7 +513,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="KindOfCompetition"
                   />
@@ -481,13 +523,16 @@
                   <span style="font-size: 13px"
                     >فیلم یا انیمیشن ترجیح میدهی:</span
                   >
-                  <input
+                  <select
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
-                    dir="auto"
+                    type="text"
                     name="animateOrMovie"
-                  />
+                  >
+                    <option value="">انتخاب کنید...</option>
+                    <option value="فیلم">فیلم</option>
+                    <option value="انیمیشن">انیمیشن</option>
+                  </select>
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
@@ -495,7 +540,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="movieGenre"
                   />
@@ -505,7 +550,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="SomeExamplesFromTheMovie"
                   />
@@ -537,7 +582,7 @@
                   <input
                     required=""
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    type="text"
                     dir="auto"
                     name="ResidenceRegistration"
                   />
@@ -563,9 +608,58 @@
                 مشخصات تحصیلی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">پایه تحصیلی:</span>
+                  <select
+                    onchange="changeeducationalBase()"
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] educationalBase"
+                    type="text"
+                    name="educationalBase"
+                  >
+                    <option value="">انتخاب کنید...</option>
+                    <option value="اول">اول</option>
+                    <option value="دوم">دوم</option>
+                    <option value="سوم">سوم</option>
+
+                    <option value="چهارم">چهارم</option>
+                    <option value="پنجم">پنجم</option>
+                    <option value="ششم">ششم</option>
+
+                    <option value="هفتم">هفتم</option>
+                    <option value="هشتم">هشتم</option>
+                    <option value="نهم">نهم</option>
+
+                    <option value="دهم">دهم</option>
+                    <option value="یازدهم">یازدهم</option>
+                    <option value="دوازدهم">دوازدهم</option>
+
+                    <option value="دانشجو">دانشجو</option>
+                    <option value="طلبه">طلبه</option>
+                  </select>
+                </div>
+                <!-- <div class="flex reshteParent" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">رشته:</span>
+                  <select
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] reshteUserInfo"
+                    type="text"
+                    name="reshteUserInfo"
+                  >
+                    <option value="رشته ندارد">رشته ندارد</option>
+                  </select>
+                  <input
+                    required=""
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] reshteUserInfoText"
+                    type="hidden"
+                    name="reshteUserInfoText"
+                    placeholder="رشته را وارد کنید"
+                  />
+                </div> -->
+
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام مدرسه:</span>
                   <input
@@ -588,7 +682,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شیفت:</span>
                   <select
-                    onchange="showOther(this,!String(this.value).includes('ثابت') && this.value)"
+                    onchange="showOther(this.nextElementSibling,!String(this.value).includes('ثابت') && this.value)"
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
                     name="schoolSift"
                     required
@@ -824,8 +918,8 @@
                 مشخصات تکمیلی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ساعت خروج از منزل:</span>
@@ -984,8 +1078,8 @@
                 برنامه درسی هفتگی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شنبه:</span>
@@ -1087,8 +1181,8 @@
                 توضیحات و نکات کلیدی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px"

@@ -21910,6 +21910,7 @@ var ol = (function () {
     try {
       return t.getBoundingBox();
     } catch (e) {
+
       return [0, 0, t.getWidth(), t.getHeight()];
     }
   }
@@ -21917,6 +21918,7 @@ var ol = (function () {
     try {
       return t.getOrigin().slice(0, 2);
     } catch (e) {
+
       return [0, t.getHeight()];
     }
   }

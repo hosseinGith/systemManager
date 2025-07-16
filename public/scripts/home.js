@@ -12,6 +12,9 @@ function formData() {
           icon: "error",
           text: "فرمت تاریخ اشتباه است.",
           confirmButtonText: "تایید",
+          customClass: {
+            confirmButton: "button",
+          },
         });
         value = false;
       } else value[item.name] = item.value;
@@ -46,18 +49,27 @@ async function submitForm(e) {
         icon: "success",
         text: res.message,
         confirmButtonText: "تایید",
+        customClass: {
+          confirmButton: "button",
+        },
       });
     else
       Swal.fire({
         icon: "error",
         text: res.message,
         confirmButtonText: "تایید",
+        customClass: {
+          confirmButton: "button",
+        },
       });
   } catch (e) {
     Swal.fire({
       icon: "error",
       text: "مشکل در سیستم.",
       confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
     });
     console.log(e);
   }
@@ -129,3 +141,9 @@ jalaliDatepicker.startWatch({
     };
   },
 });
+function changeeducationalBase() {
+  $(".reshteUserInfo").addClass("hidden");
+  $(".reshteUserInfoText").addClass("hidden");
+  if ($(".educationalBase").val() === "")
+    $(".reshteUserInfoText").addClass("hidden");
+}

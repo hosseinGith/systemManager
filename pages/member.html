@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/assets/image/data.png" />
     <link rel="manifest" href="/scripts/manifest.json" />
-    <link rel="stylesheet" href="/styles/openlayers.css" />
+    <link rel="stylesheet" href="/openlayers.css" />
     <script src="/scripts/openlayers.js"></script>
     <script src="/scripts/jquery.js"></script>
     <!-- ios support -->
@@ -18,6 +18,7 @@
     <link rel="apple-touch-icon" href="/assets/image/data.png" />
     <link rel="apple-touch-icon" href="/assets/image/data.png" />
     <link rel="stylesheet" href="/styles/swiper.min.css" />
+    <!-- <script src="/scripts/chart.js"></script> -->
     <script src="/scripts/sweetAlert.js"></script>
     <script src="/scripts/jalalidatepicker.min.js"></script>
     <script src="/scripts/moment-jalaali.min.js"></script>
@@ -27,6 +28,11 @@
     <meta name="theme-color" content="#fff" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="/styles/main.css?v=1" />
+
+    <script src="/scripts/chart.js"></script>
+    <script src="/scripts/hammerjs.js"></script>
+    <script src="/scripts/chartjs-plugin-zoom.js"></script>
+
     <style>
       table {
         width: 95%;
@@ -125,7 +131,7 @@
         </div>
       </section>
     </header>
-    <main class="sm:pt-[100px] pt-[40px]">
+    <main class="space-y-8">
       <section>
         <form
           onsubmit="submitForm(event,memebr)"
@@ -153,13 +159,13 @@
                 مشخصات فردی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="firstName"
                   />
@@ -167,8 +173,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام خانوادگی:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="lastName"
                   />
@@ -177,8 +183,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام پدر:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="fatherName"
                   />
@@ -187,8 +193,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">تاریخ تولد:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="birthDayDate"
                     data-jdp="true"
@@ -197,8 +203,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">محل تولد:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] inputsOnclickShowLocation"
+                    required="true"
+                    class="w-full input inputsOnclickShowLocation"
                     type="text"
                     name="makeLoaction"
                   />
@@ -207,8 +213,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">وزن:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="weight"
                   />
@@ -216,8 +222,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">قد:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="length"
                   />
@@ -225,8 +231,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">راست یا چپ دست:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="mainHend"
                   >
@@ -238,8 +244,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">راست یا چپ پا:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="mainFoot"
                   >
@@ -253,44 +259,18 @@
                     >مشکلات جسمی و بیماری های زمینه ای:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="PhysicalProblemsAndUnderlyingDiseases"
                   />
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">پایه تحصیلی:</span>
-                  <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="text"
-                    name="educationalBase"
-                  >
-                    <option value="">انتخاب کنید...</option>
-                    <option value="اول">اول</option>
-                    <option value="دوم">دوم</option>
-                    <option value="سوم">سوم</option>
-                    <option value="چهارم">چهارم</option>
-                    <option value="پنجم">پنجم</option>
-                    <option value="ششم">ششم</option>
-                    <option value="هفتم">هفتم</option>
-                    <option value="هشتم">هشتم</option>
-                    <option value="نهم">نهم</option>
-                    <option value="دهم">دهم</option>
-                    <option value="یازدهم">یازدهم</option>
-                    <option value="دوازدهم">دوازدهم</option>
-                    <option value="دانشجو">دانشجو</option>
-                    <option value="طلبه">طلبه</option>
-                  </select>
-                </div>
-
-                <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">مربی:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="teacherName"
                   />
@@ -299,8 +279,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شماره موبایل:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="number"
                     dir="auto"
                     name="number"
@@ -310,71 +290,109 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">کد ملی:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="number"
                     dir="auto"
                     name="nationalId"
                   />
                 </div>
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">میزان استفاده از موبایل:</span>
-                  <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="text"
-                    name="phoneUseLength"
-                  >
-                    <option value="">انتخاب کنید...</option>
-                    <option value="زیاد">زیاد</option>
-                    <option value="متوسط">متوسط</option>
-                    <option value="کم">کم</option>
-                  </select>
-                </div>
-                <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">موارد استفاده از موبایل:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="phoneUseAbout"
                   >
                     <option value="">انتخاب کنید...</option>
-                    <option value="بازی .  زیاد">بازی . زیاد</option>
-                    <option value="بازی .  متوسط">بازی . متوسط</option>
-                    <option value="بازی .  کم">بازی . کم</option>
-                    <option value="ادیت .  زیاد">ادیت . زیاد</option>
-                    <option value="ادیت .  متوسط">ادیت . متوسط</option>
-                    <option value="ادیت .  کم">ادیت . کم</option>
+                    <option value="بازی">بازی</option>
+                    <option value="ادیت">ادیت</option>
                   </select>
                 </div>
+
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">نام بازی های مورد علاقه:</span>
+                  <span style="font-size: 13px">1 نام بازی مورد علاقه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="favoriteGames"
                   />
                 </div>
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px"
-                    >نام برنامه های مورد علاقه:</span
-                  >
+                  <span style="font-size: 13px">2 نام بازی مورد علاقه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    name="favoriteGames2"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام بازی مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    name="favoriteGames3"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام بازی مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    name="favoriteGames4"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">1 نام برنامه مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
-                    name="favoriteApps"
+                    name="favoriteApps1"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">2 نام برنامه مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps2"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام برنامه مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps3"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام برنامه مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteApps4"
                   />
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">شبکه های اجتماعی:</span>
+                  <span style="font-size: 13px">میزان استفاده:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="sosialLength"
                   >
@@ -389,8 +407,8 @@
                   <span style="font-size: 13px">مطالعه:</span>
 
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="learningLength"
                   >
@@ -404,9 +422,9 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام سایت یا نحوه مطالعه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="webSiteOrLearnAbout"
                   />
@@ -415,8 +433,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">فیلم:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="movieAbout"
                   >
@@ -428,13 +446,43 @@
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
-                  <span style="font-size: 13px">نام فیلم های مورد علاقه:</span>
+                  <span style="font-size: 13px">1 نام فیلم مورد علاقه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="favoriteMovies"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">2 نام فیلم مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies2"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">3 نام فیلم مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies3"
+                  />
+                </div>
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">4 نام فیلم مورد علاقه:</span>
+                  <input
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    dir="auto"
+                    name="favoriteMovies4"
                   />
                 </div>
 
@@ -442,8 +490,8 @@
                   <span style="font-size: 13px">میزان تماشای فیلم:</span>
 
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="moviesLength"
                   >
@@ -457,9 +505,9 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">سبک وژانر فیلم ها:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="FilmStyleAndGenre"
                   />
@@ -470,9 +518,9 @@
                     >کدام شبکه ها را معمولا تماشا میکنی:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="favoriteSignal"
                   />
@@ -483,9 +531,9 @@
                     >کدام شبکه ها را معمولا تماشا میکنی:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="watchingHabits"
                   />
@@ -496,9 +544,9 @@
                     >چه نوع مسابقاتی را دنبال میکنی:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="KindOfCompetition"
                   />
@@ -508,21 +556,24 @@
                   <span style="font-size: 13px"
                     >فیلم یا انیمیشن ترجیح میدهی:</span
                   >
-                  <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
-                    dir="auto"
+                  <select
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     name="animateOrMovie"
-                  />
+                  >
+                    <option value="">انتخاب کنید...</option>
+                    <option value="فیلم">فیلم</option>
+                    <option value="انیمیشن">انیمیشن</option>
+                  </select>
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ژانر فیلم:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="movieGenre"
                   />
@@ -530,9 +581,9 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">چند نمونه از فیلم:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="SomeExamplesFromTheMovie"
                   />
@@ -540,8 +591,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">خواب ظهرانه:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="afternoonNap"
                   >
@@ -553,9 +604,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">آدرس دقیق محل سکونت:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] inputsOnclickShowLocation"
-                    type="number"
+                    required="true"
+                    class="w-full input inputsOnclickShowLocation"
                     dir="auto"
                     name="livingAddres"
                   />
@@ -563,9 +613,9 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">سابقه سکونت:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-                    type="number"
+                    required="true"
+                    class="w-full input"
+                    type="text"
                     dir="auto"
                     name="ResidenceRegistration"
                   />
@@ -591,14 +641,45 @@
                 مشخصات تحصیلی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
+                <div class="flex" style="flex-wrap: wrap">
+                  <span style="font-size: 13px">پایه تحصیلی:</span>
+                  <select
+                    required="true"
+                    class="w-full input"
+                    type="text"
+                    name="educationalBase"
+                  >
+                    <option value="">انتخاب کنید...</option>
+
+                    <option value="اول">اول</option>
+                    <option value="دوم">دوم</option>
+                    <option value="سوم">سوم</option>
+
+                    <option value="چهارم">چهارم</option>
+                    <option value="پنجم">پنجم</option>
+                    <option value="ششم">ششم</option>
+
+                    <option value="هفتم">هفتم</option>
+                    <option value="هشتم">هشتم</option>
+                    <option value="نهم">نهم</option>
+
+                    <option value="دهم">دهم</option>
+                    <option value="یازدهم">یازدهم</option>
+                    <option value="دوازدهم">دوازدهم</option>
+
+                    <option value="دانشجو">دانشجو</option>
+                    <option value="طلبه">طلبه</option>
+                  </select>
+                </div>
+
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نام مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="schoolName"
                   />
@@ -607,8 +688,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ادرس مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px] inputsOnclickShowLocation"
+                    required="true"
+                    class="w-full input inputsOnclickShowLocation"
                     type="text"
                     name="schoolAddress"
                   />
@@ -616,8 +697,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شیفت:</span>
                   <select
-                    onchange="showOther(this,!String(this.value).includes('ثابت') && this.value)"
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    onchange="showOther(this.nextElementSibling,!String(this.value).includes('ثابت') && this.value)"
+                    class="w-full input"
                     name="schoolSift"
                     required
                   >
@@ -631,17 +712,16 @@
                     type="hidden"
                     data-jdp="true"
                     required
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    class="w-full input"
                     name="dateSchoolSift"
-                    id=""
                   />
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شماره کلاس:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="classNumber"
                   />
@@ -650,8 +730,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">طبقه:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="tabaghe"
                   >
@@ -665,8 +745,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">مدیر مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="schoolManager"
                   />
@@ -675,8 +755,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">معاون مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="schoolMoeaven"
                   />
@@ -685,8 +765,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">رشته تحصیلی:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="fieldOfStudy"
                   />
@@ -695,8 +775,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">رشته هدف:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="targetField"
                   />
@@ -705,8 +785,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">رشته هدف دانشگاهی:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="targetFieldUniversity"
                   />
@@ -715,8 +795,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">هدف کاری از انتخاب رشته:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="targetJobOfChoosField"
                   />
@@ -725,8 +805,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">معدل سال گذشته:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="number"
                     name="lastYearGPA"
                   />
@@ -735,8 +815,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">معدل سال ما قبل:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="lastOfLastYearGPA"
                   />
@@ -745,8 +825,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">امکانات مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="schoolFacilities"
                   />
@@ -757,8 +837,8 @@
                     >برگزاری نماز جماعت ظهر و عصر:</span
                   >
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="prayingStatus"
                   >
@@ -773,8 +853,8 @@
                     >نام مبلغ (نماز گزار) مدرسه:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="preacherNameOfschool"
                   />
@@ -785,8 +865,8 @@
                     >اسامی معلمان به تفکیک درس:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="teachersBySubjectName"
                   />
@@ -795,8 +875,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">قوی ترین درس:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="strongestLesson"
                   />
@@ -805,8 +885,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ضعیف ترین درس:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="lowestLesson"
                   />
@@ -814,8 +894,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">درس مورد علاقه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="favoriteLesson"
                   />
@@ -825,8 +905,8 @@
                     >در صورت تغییر مدرسه در یک مقطع ذکر شود:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="changedSchoole"
                   />
@@ -852,14 +932,14 @@
                 مشخصات تکمیلی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ساعت خروج از منزل:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourOfHomeOut"
                   />
@@ -868,8 +948,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ساعت حضور در مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourOfPresenceInSchool"
                   />
@@ -878,8 +958,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ساعت خروج از مدرسه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourOutOfSchool"
                   />
@@ -888,8 +968,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">ساعت رسیدن به منزل:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourOfWentToHome"
                   />
@@ -900,8 +980,8 @@
                     >تعداد کلاس های درسی روزانه:</span
                   >
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="pcsOfDayliClass"
                   />
@@ -910,8 +990,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">زنگ تفریح اول:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourFunBellFirst"
                   />
@@ -920,8 +1000,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">زنگ تفریح دوم:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourFunBellSec"
                   />
@@ -930,8 +1010,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">زنگ تفریح سوم:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourFunBellThi"
                   />
@@ -940,8 +1020,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">زنگ تفریح چهارم:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="hourFunBellFour"
                   />
@@ -950,8 +1030,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">نحوه ایاب و ذهاب:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="howComeAndGo"
                   />
@@ -960,8 +1040,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">روز های تحصیلی:</span>
                   <select
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="schoolDays"
                   >
@@ -985,8 +1065,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شیفت های ثابت:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="fixedShifts"
                   />
@@ -1012,14 +1092,14 @@
                 برنامه درسی هفتگی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">شنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="saturday"
                   />
@@ -1028,8 +1108,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">یکشنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="sunday"
                   />
@@ -1038,8 +1118,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">دوشنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="monday"
                   />
@@ -1048,8 +1128,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">سه شنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="tuesday"
                   />
@@ -1058,8 +1138,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">چهارشنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="wednesday"
                   />
@@ -1068,8 +1148,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">پنجشنبه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="thursday"
                   />
@@ -1078,8 +1158,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">جمعه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="friday"
                   />
@@ -1088,8 +1168,8 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">تقویتی و فوق برنامه:</span>
                   <input
-                    required=""
-                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    required="true"
+                    class="w-full input"
                     type="text"
                     name="ReinforcementAndExtracurricular"
                   />
@@ -1115,20 +1195,82 @@
                 توضیحات و نکات کلیدی
               </h1>
               <div
-                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start h-[calc-size(auto,size)] overflow-hidden transition-all duration-500"
-                style="height: calc-size(auto, 0px)"
+                class="grid grid-cols-1 md:grid-cols-2 m-4 gap-4 items-start overflow-hidden transition-all duration-500"
+                style="height: 0px"
               >
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px"
                     >توضیحات و نکات کلیدی(توسط مربی تکمیل شود):</span
                   >
                   <textarea
-                    required=""
+                    required="true"
                     class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg"
                     type="text"
                     name="ExplanationsAndKeyPoints"
                   >
                   </textarea>
+                </div>
+              </div>
+            </div>
+            <div
+              style="
+                gap: 10px;
+                border: 2px solid #bbb;
+                width: 100%;
+                display: none;
+              "
+              class="gap: 10px; border: 2px solid #bbb; width: 100%"
+              id="shiftCont"
+              style="
+                background: black;
+                color: #fff;
+                width: 90%;
+                max-width: 500px;
+                margin: 0 auto;
+                border-radius: 0 0 20px 20px;
+              "
+            >
+              <h1
+                style="
+                  background: black;
+                  color: #fff;
+                  width: 90%;
+                  max-width: 500px;
+                  margin: 0 auto;
+                  border-radius: 0 0 20px 20px;
+                "
+                class="text-center sectionTitle py-2"
+              >
+                شیفت هفته های سال
+              </h1>
+              <div
+                class="flex flex-col overflow-hidden transition-all duration-500"
+                style="height: 0px"
+              >
+                <div
+                  class="flex items-center text-nowrap mx-auto p-8 gap-4"
+                  style="max-width: 350px"
+                >
+                  <label for="">جستجو برای</label>
+                  <input
+                    class="w-full input"
+                    type="text"
+                    placeholder="1400/07/01 مثال"
+                    oninput="searchInShiftDate(this.value)"
+                    data-jdp="true"
+                    title="باید یا اخر هفته یعنی جمعه یا اول هفته یعنی شنبه باید."
+                  />
+                </div>
+                <div class="w-full overflow-auto sm:text-[16px] text-sm">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>تاریخ</th>
+                        <th>شیفت</th>
+                      </tr>
+                    </thead>
+                    <tbody id="weeksTable"></tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -1144,34 +1286,295 @@
           </button>
         </form>
       </section>
-      <section class="py-8" id="shiftCont" style="display: none">
-        <div class="container">
-          <h1 class="text-center text-xl sm:text-2xl">شیفت هفته های سال</h1>
-          <div
-            class="flex items-center text-nowrap mx-auto p-8 gap-4"
-            style="max-width: 350px"
+      <section class="p-8">
+        <div class="max-w-[800px] mx-auto space-y-4">
+          <h1 class="text-center">اضافه کردن نمره کتاب های کاربر</h1>
+          <form id="addScoreForm">
+            <div class="flex-col flex gap-4">
+              <div class="flex flex-wrap">
+                <span style="font-size: 13px">پایه تحصیلی را انتخاب کنید:</span>
+                <select
+                  required="true"
+                  class="w-full input educationalBaseAddScore"
+                  type="text"
+                  onchange="userEducationalBaseChangeHand(`addScoreForm`)"
+                >
+                  <option value="">انتخاب کنید...</option>
+
+                  <option value="اول">اول</option>
+                  <option value="دوم">دوم</option>
+                  <option value="سوم">سوم</option>
+
+                  <option value="چهارم">چهارم</option>
+                  <option value="پنجم">پنجم</option>
+                  <option value="ششم">ششم</option>
+
+                  <option value="هفتم">هفتم</option>
+                  <option value="هشتم">هشتم</option>
+                  <option value="نهم">نهم</option>
+
+                  <option value="دهم">دهم</option>
+                  <option value="یازدهم">یازدهم</option>
+                  <option value="دوازدهم">دوازدهم</option>
+
+                  <option value="دانشجو">دانشجو</option>
+                  <option value="طلبه">طلبه</option>
+                </select>
+              </div>
+
+              <div
+                class="flex items-center flex-wrap gap-4 sm:text-[16px] text-sm"
+              >
+                <div class="hidden reshteParent">
+                  <span style="font-size: 13px">رشته:</span>
+                  <select
+                    required="true"
+                    class="w-full input reshteSelect"
+                    type="text"
+                    onchange="userEducationalBaseChangeHand(`addScoreForm`)"
+                  >
+                    <option value="انسانی">انسانی</option>
+                    <option value="ریاضی فیزیک">ریاضی فیزیک</option>
+                    <option value="تجربی">تجربی</option>
+                    <option value="غیر نظری">غیر نظری</option>
+                  </select>
+                </div>
+                <div class="bookSelectParent">
+                  <span style="font-size: 13px">کتاب مورد نظر:</span>
+                  <select class="w-full input bookName" type="text"></select>
+                </div>
+                <div class="hidden sm:w-[70%] w-full textBookParent">
+                  <span style="font-size: 13px"
+                    >کتاب مورد نظر را وارد کنید:</span
+                  >
+                  <input
+                    class="w-full input bookTextName"
+                    name="bookTextName"
+                    placeholder="مثال : رشته - اسم کتاب"
+                    type="text"
+                  />
+                </div>
+                <div class="flex-col flex">
+                  <span style="font-size: 13px" class="max-w-max mb-1"
+                    >نمره در کتاب:</span
+                  >
+                  <input
+                    required="true"
+                    max="20"
+                    min="0"
+                    dir="ltr"
+                    class="max-w-[130px] input text-center scoreInput"
+                    name="scoreInput"
+                    type="number"
+                  />
+                </div>
+                <div class="flex-col flex">
+                  <span style="font-size: 13px" class="max-w-max mb-1"
+                    >تاریخ روز امتحان:</span
+                  >
+                  <input
+                    required="true"
+                    dir="ltr"
+                    class="max-w-[150px] input text-center dateBookQuestion"
+                    name="dateBookQuestion"
+                    type="text"
+                    data-jdp="true"
+                  />
+                </div>
+                <div>
+                  <span style="font-size: 13px">نوع نمره:</span>
+                  <select
+                    required="true"
+                    class="w-full input requestScoreType"
+                    type="text"
+                  >
+                    <option value="mostamar">مستمر</option>
+                    <option value="middleOwn">نوبت اول</option>
+                    <option value="middleTow">نوبت دوم</option>
+                  </select>
+                </div>
+              </div>
+              <div class="py-4 mx-auto">
+                <button class="button" type="submit">اضافه کردن</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+      <section class="pb-20">
+        <div
+          class="text-center mx-auto border-4 border-gray-500 rounded-xl overflow-hidden"
+        >
+          <h1
+            class="sectionTitle py-2"
+            style="background: rgb(0, 0, 0); color: rgb(255, 255, 255)"
           >
-            <label for="">جستجو برای</label>
-            <input
-              class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
-              type="text"
-              placeholder="1400/07/01 مثال"
-              oninput="searchInShiftDate(this.value)"
-              name=""
-              data-jdp="true"
-              title="باید یا اخر هفته یعنی جمعه یا اول هفته یعنی شنبه باید."
-              id=""
-            />
+            گزارش نمرات کاربر
+          </h1>
+          <div class="overflow-hidden transition-all" style="height: 0px">
+            <form class="text-sm space-y-4 p-4" id="showChartForm">
+              <div class="flex-col flex gap-4" id="showReportScore">
+                <div class="flex flex-wrap">
+                  <span style="font-size: 13px"
+                    >پایه تحصیلی تاریخ شروع را انتخاب کنید:</span
+                  >
+                  <select
+                    required="true"
+                    class="w-full input educationalBaseAddScore"
+                    type="text"
+                    onchange="userEducationalBaseChangeHand(`showReportScore`)"
+                  >
+                    <option value="">انتخاب کنید...</option>
+
+                    <option value="اول">اول</option>
+                    <option value="دوم">دوم</option>
+                    <option value="سوم">سوم</option>
+
+                    <option value="چهارم">چهارم</option>
+                    <option value="پنجم">پنجم</option>
+                    <option value="ششم">ششم</option>
+
+                    <option value="هفتم">هفتم</option>
+                    <option value="هشتم">هشتم</option>
+                    <option value="نهم">نهم</option>
+
+                    <option value="دهم">دهم</option>
+                    <option value="یازدهم">یازدهم</option>
+                    <option value="دوازدهم">دوازدهم</option>
+
+                    <option value="دانشجو">دانشجو</option>
+                    <option value="طلبه">طلبه</option>
+                  </select>
+                </div>
+
+                <div
+                  class="flex items-center flex-wrap gap-4 sm:text-[16px] text-sm"
+                >
+                  <div class="hidden reshteParent w-full">
+                    <span style="font-size: 13px" class="block text-start"
+                      >رشته:</span
+                    >
+                    <select
+                      required="true"
+                      class="w-full input reshteSelect"
+                      type="text"
+                      onchange="userEducationalBaseChangeHand(`showReportScore`)"
+                    >
+                      <option value="انسانی">انسانی</option>
+                      <option value="ریاضی فیزیک">ریاضی فیزیک</option>
+                      <option value="تجربی">تجربی</option>
+                      <option value="غیر نظری">غیر نظری</option>
+                    </select>
+                  </div>
+                  <div class="bookSelectParent w-full">
+                    <span style="font-size: 13px" class="block text-start"
+                      >کتاب مورد نظر:</span
+                    >
+                    <select
+                      required="true"
+                      class="w-full input bookName"
+                      type="text"
+                    ></select>
+                  </div>
+                  <div class="hidden w-full textBookParent">
+                    <span style="font-size: 13px" class="block text-start"
+                      >کتاب مورد نظر را وارد کنید:</span
+                    >
+                    <input
+                      class="w-full input bookTextName"
+                      name="bookTextName"
+                      placeholder="مثال : رشته - اسم کتاب"
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <fieldset
+                class="py-4 border-4 border-gray-600 px-4 whitespace-nowrap text-start"
+              >
+                <legend class="text-start py-4 text-lg px-2">تاریخ</legend>
+                <div class="flex flex-wrap justify-center gap-4">
+                  <label>
+                    <span>تاریخ از</span>
+                    <input
+                      data-jdp="true"
+                      class="input text-center max-w-[150px] dateFrom"
+                      required="true"
+                      type="text"
+                    />
+                  </label>
+                  <label>
+                    <span>تاریخ تا</span>
+                    <input
+                      required="true"
+                      data-jdp="true"
+                      class="input text-center max-w-[150px] dateTo"
+                      type="text"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="py-4 border-4 border-gray-600 px-4 h-auto">
+                <legend class="text-start py-4 text-lg px-2">
+                  چاپ کردن کارنامه
+                </legend>
+                <div class="flex justify-center flex-wrap items-end gap-4">
+                  <div>
+                    <span class="text-start block">نوع چاپ:</span>
+                    <select
+                      required="true"
+                      class="w-full input"
+                      id="printType"
+                      type="text"
+                    >
+                      <option value="all">کارنامه کلی</option>
+                      <option value="schoole">کارنامه مدرسه ای</option>
+                    </select>
+                  </div>
+                  <button
+                    id="printButton"
+                    class="button bg-gray-400 text-black mx-0 mb-1"
+                    type="button"
+                  >
+                    چاپ کردن
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset class="border-4 border-gray-600 px-4">
+                <legend class="text-start py-4 text-lg px-2">
+                  نمایش نمودار
+                </legend>
+                <div>
+                  <span class="text-start block">نوع نمودار:</span>
+                  <select
+                    required="true"
+                    class="w-full input"
+                    id="chartType"
+                    type="text"
+                  >
+                    <option value="line">خطی</option>
+                    <option value="bar">ستونی</option>
+                    <option value="pie">دایره</option>
+                    <option value="radar">رادار</option>
+                  </select>
+                </div>
+                <div class="py-4">
+                  <button class="button" type="submit">نمایش نمودار</button>
+                </div>
+              </fieldset>
+            </form>
+            <div
+              class="sm:px-8 w-full flex justify-center bg-[#0f2d81] h-0 overflow-hidden flex-col "
+              id="canvasCont"
+            >
+              <p class="py-4 bg-white">
+                <span>تعداد نتایج :</span>  
+                <span id="pcsResult"></span>
+              </p>
+              <canvas class="w-full bg-white h-[300px]"></canvas>
+            </div>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>تاریخ</th>
-                <th>شیفت</th>
-              </tr>
-            </thead>
-            <tbody id="weeksTable"></tbody>
-          </table>
         </div>
       </section>
     </main>
@@ -1181,300 +1584,7 @@
       </div>
     </div>
     <script src="/scripts/main.js?v=1"></script>
-    <script>
-      const form = document.querySelector("form");
-      const loading = document.querySelector(".loading");
-      const allFormInputs = form.querySelectorAll(
-        "input:not([type='hidden']),select:not([type='hidden']),textarea:not([type='hidden'])"
-      );
-
-      const match = window.location.pathname.match(/\/member\/(\d+)/);
-      const userId = match ? Number(match[1]) : null;
-      let columns;
-      let memebr;
-      (async () => {
-        columns = await (await fetch("/columns")).json();
-        columns = columns.columns;
-        columns.forEach((item) => {
-          if (typeof item.value === "string")
-            item.value = JSON.parse(item.value);
-        });
-        memebr = await (
-          await fetch("/getMemebrData", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify({ id: userId }),
-          })
-        ).json();
-        console.log(memebr);
-        Object.keys(memebr).forEach((key) => {
-          if (document.querySelector(`[name="${key}"]`))
-            document.querySelector(`[name="${key}"]`).value = memebr[key];
-        });
-        if (!String(memebr.schoolSift).includes("ثابت")) {
-          document.querySelector("[name='dateSchoolSift']").type = "text";
-        } else {
-          document.querySelector("[name='dateSchoolSift']").type = "hidden";
-        }
-        if (memebr.schoolSift === "صبح" || memebr.schoolSift === "عصر") {
-          generateWeeks(memebr.dateSchoolSift, memebr.schoolSift === "صبح");
-          document.querySelector("#shiftCont").style.display = "";
-        } else {
-          document.querySelector("#shiftCont").style.display = "none";
-        }
-        document.querySelector("#titleOfthePage").textContent =
-          "کاربر: " + memebr.firstName + " " + memebr.lastName;
-      })();
-      function input(target) {
-        if (target) {
-          if (target.value !== memebr[target.name]) {
-            target.style.borderColor = "red";
-          } else target.style.borderColor = "";
-        }
-      }
-      Array.from(allFormInputs).forEach((element) => {
-        if (!element.options)
-          element.addEventListener("input", function () {
-            input(this);
-          });
-        else
-          element.addEventListener("change", function () {
-            input(this);
-          });
-      });
-
-      function formData(memebr) {
-        let value = {};
-        Object.keys(memebr).forEach((key) => {
-          let target = document.querySelector(
-            `[name="${key}"]:not([type="hidden"])`
-          );
-          if (target)
-            if (
-              target.value !== memebr[key] &&
-              target.name === "birthDayDate"
-            ) {
-              if (!isValidJalaliDate(target.value)) {
-                Swal.fire({
-                  icon: "error",
-                  text: "فرمت تاریخ نا معتبر است..",
-                  confirmButtonText: "تایید",
-                });
-                value = false;
-              } else value[target.name] = target.value;
-            } else if (value && target.value !== memebr[key])
-              value[key] = target.value;
-        });
-        if (Object.keys(value).length > 0)
-          value["nationalId"] = document.querySelector(
-            '[name="nationalId"]'
-          ).value;
-        return value;
-      }
-
-      async function submitForm(e) {
-        e.preventDefault();
-        loading.classList.remove("opacity-0");
-        loading.classList.remove("pointer-events-none");
-        let body = formData(memebr);
-        if (!body) {
-          loading.classList.add("opacity-0");
-          loading.classList.add("pointer-events-none");
-          return;
-        }
-        if (Object.values(body).length === 0) {
-          Swal.fire({
-            icon: "error",
-            text: "فیلد های کاربر ویرایش نشده است.",
-            confirmButtonText: "تایید",
-          });
-        } else
-          try {
-            let res = await (
-              await fetch("/edit-member/" + userId, {
-                method: "POST",
-                headers: {
-                  "Content-type": "application/json",
-                },
-                body: JSON.stringify(body),
-              })
-            ).json();
-            console.log(res);
-            if (res.status) {
-              Array.from(allFormInputs).forEach((element) => {
-                element.style.borderColor = "";
-              });
-              Swal.fire({
-                icon: "success",
-                text: "کاربر ویرایش شد.",
-                confirmButtonText: "تایید",
-              });
-              document.querySelector("#titleOfthePage").textContent =
-                "کاربر: " +
-                document.querySelector('[name="firstName"]').value +
-                " " +
-                document.querySelector('[name="lastName"]').value;
-              memebr = await (
-                await fetch("/getMemebrData", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                  body: JSON.stringify({ id: userId }),
-                })
-              ).json();
-              if (memebr.schoolSift === "صبح" || memebr.schoolSift === "عصر") {
-                generateWeeks(
-                  memebr.dateSchoolSift,
-                  memebr.schoolSift === "صبح"
-                );
-                document.querySelector("#shiftCont").style.display = "";
-              } else {
-                document.querySelector("#shiftCont").style.display = "none";
-              }
-            } else
-              Swal.fire({
-                icon: "error",
-                text: res.message,
-                confirmButtonText: "تایید",
-              });
-          } catch (e) {
-            Swal.fire({
-              icon: "error",
-              text: "مشکل در سیستم.",
-              confirmButtonText: "تایید",
-            });
-            console.log(e);
-          }
-
-        loading.classList.add("opacity-0");
-        loading.classList.add("pointer-events-none");
-      }
-
-      let addUs_birthday = document.querySelector(".birthDayDate");
-      jalaliDatepicker.startWatch({
-        dayRendering: function (dayOptions, addUs_birthday) {
-          return {
-            isHollyDay: dayOptions.month == 1 && dayOptions.day <= 4,
-          };
-        },
-      });
-      document.querySelector("[name='schoolSift']").onchange = function () {
-        if (!String(this.value).includes("ثابت")) {
-          document.querySelector("[name='dateSchoolSift']").type = "text";
-        } else {
-          document.querySelector("[name='dateSchoolSift']").type = "hidden";
-        }
-      };
-      moment.locale("fa");
-      function isMorningWeek(startWeek, checkWeek, startMorning = true) {
-        let weekDiff = checkWeek - startWeek;
-        return weekDiff % 2 === 0 ? startMorning : !startMorning;
-      }
-
-      function getShamsiWeek(dateString) {
-        let date = moment(dateString, "jYYYY-jMM-jDD");
-        return date.jWeek(); // شماره هفته شمسی
-      }
-
-      function generateWeeks(dateInput, isMorning = true) {
-        let inputDate = moment(dateInput, "jYYYY/jMM/jDD");
-        let year = inputDate.jYear(); // سال شمسی را دریافت می‌کنیم
-
-        // شروع و پایان سال تحصیلی را داینامیک تعیین می‌کنیم
-        let startYear = moment(`${year}/07/01`, "jYYYY-jMM-jDD")
-          .clone()
-          .startOf("week"); // ۱ مهر همان سال
-        dateInput = moment(dateInput, "jYYYY-jMM-jDD")
-          .clone()
-          .startOf("week")
-          .format("jYYYY-jMM-jDD");
-        console.log(dateInput);
-        let startDate = moment(dateInput, "jYYYY-jMM-jDD"); // ۱ مهر همان سال
-        let endDate = moment(`${year + 1}-04-01`, "jYYYY-jMM-jDD")
-          .clone()
-          .startOf("week"); // ۱ تیر سال بعد
-        endDate = endDate.clone().endOf("week");
-
-        let selectedWeek = getShamsiWeek(dateInput);
-        let tableBody = document.getElementById("weeksTable");
-        tableBody.innerHTML = ""; // پاک کردن جدول قبلی
-
-        let currentDate = moment(startYear);
-        while (currentDate.isBefore(startDate)) {
-          if (currentDate.jWeek() === selectedWeek) {
-            currentDate.add(1, "weeks"); // هفته بعد برو
-            continue;
-          }
-          let weekNum = getShamsiWeek(currentDate.format("jYYYY-jMM-jDD"));
-          let isThisWeekMorning = isMorningWeek(
-            selectedWeek,
-            weekNum,
-            isMorning
-          );
-
-          let row = `<tr class="slowMotionAnimateClose ${
-            isThisWeekMorning ? "morning" : "evening"
-          }">
-                          <td class='dateShift '>از ${currentDate.format(
-                            "jYYYY/jMM/jDD"
-                          )} تا ${currentDate
-            .clone()
-            .endOf("week")
-            .format("jYYYY/jMM/jDD")}</td>
-                            <td>${isThisWeekMorning ? "🌞 صبح" : "🌙 عصر"}</td>
-                           </tr>`;
-          tableBody.innerHTML += row;
-
-          currentDate.add(1, "weeks"); // رفتن به هفته‌ی بعد
-        }
-        currentDate = moment(startDate);
-        while (currentDate.isBefore(endDate)) {
-          let weekNum = getShamsiWeek(currentDate.format("jYYYY-jMM-jDD"));
-          let isThisWeekMorning = isMorningWeek(
-            selectedWeek,
-            weekNum,
-            isMorning
-          );
-
-          let row = `<tr class="slowMotionAnimateClose ${
-            isThisWeekMorning ? "morning" : "evening"
-          }">
-                            <td class='dateShift '>از ${currentDate.format(
-                              "jYYYY/jMM/jDD"
-                            )} تا ${currentDate
-            .clone()
-            .endOf("week")
-            .format("jYYYY/jMM/jDD")}</td>
-                            <td>${isThisWeekMorning ? "🌞 صبح" : "🌙 عصر"}</td>
-                           </tr>`;
-          tableBody.innerHTML += row;
-
-          currentDate.add(1, "weeks"); // رفتن به هفته‌ی بعد
-        }
-      }
-      function searchInShiftDate(date) {
-        let dateShift = document.querySelectorAll(".dateShift");
-        if (!date)
-          return Array.from(dateShift).forEach((item) => {
-            item.parentElement.classList.remove("active");
-          });
-        console.log(date);
-        Array.from(dateShift).forEach((item) => {
-          item.parentElement.classList.add("active");
-        });
-        Array.from(dateShift).forEach((item) => {
-          if (
-            item.textContent.includes(date) ||
-            date.includes(item.textContent)
-          ) {
-            item.parentElement.classList.remove("active");
-          }
-        });
-      }
-    </script>
+    <script src="/scripts/member.js"></script>
     <script src="/scripts/gps.js?v=1"></script>
   </body>
 </html>

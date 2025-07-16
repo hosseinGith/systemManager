@@ -420,6 +420,7 @@
       k.apply((oe = ae.call(ye.childNodes)), ye.childNodes),
         oe[ye.childNodes.length].nodeType;
     } catch (e) {
+
       k = {
         apply: function (e, t) {
           me.apply(e, ae.call(t));
@@ -475,6 +476,7 @@
           try {
             return k.apply(n, f.querySelectorAll(c)), n;
           } catch (e) {
+
             h(t, !0);
           } finally {
             s === S && e.removeAttribute("id");
@@ -500,6 +502,7 @@
       try {
         return !!e(t);
       } catch (e) {
+
         return !1;
       } finally {
         t.parentNode && t.parentNode.removeChild(t), (t = null);
@@ -575,6 +578,7 @@
             try {
               return T.querySelector(":has(*,:jqfake)"), !1;
             } catch (e) {
+
               return !0;
             }
           })),
@@ -692,6 +696,7 @@
           )
             return n;
         } catch (e) {
+
           h(t, !0);
         }
       return 0 < I(t, T, null, [e]).length;
@@ -970,7 +975,8 @@
                 (function () {
                   try {
                     return T.activeElement;
-                  } catch (e) {}
+                  } catch (e) {
+}
                 })() &&
               T.hasFocus() &&
               !!(e.type || e.href || ~e.tabIndex)
@@ -1585,6 +1591,7 @@
         ? i.call(e, t, n)
         : t.apply(void 0, [e].slice(r));
     } catch (e) {
+
       n.apply(void 0, [e]);
     }
   }
@@ -1772,6 +1779,7 @@
                           try {
                             e();
                           } catch (e) {
+
                             ce.Deferred.exceptionHook &&
                               ce.Deferred.exceptionHook(e, t.error),
                               u <= i + 1 &&
@@ -2007,7 +2015,8 @@
                 : X.test(i)
                 ? JSON.parse(i)
                 : i));
-        } catch (e) {}
+        } catch (e) {
+}
         z.set(e, t, n);
       } else n = void 0;
     return n;
@@ -3056,7 +3065,8 @@
                   1 === (t = this[n] || {}).nodeType &&
                     (ce.cleanData(Se(t, !1)), (t.innerHTML = e));
                 t = 0;
-              } catch (e) {}
+              } catch (e) {
+}
             }
             t && this.empty().append(e);
           },
@@ -4294,7 +4304,8 @@
     if (!e || "string" != typeof e) return null;
     try {
       t = new ie.DOMParser().parseFromString(e, "text/xml");
-    } catch (e) {}
+    } catch (e) {
+}
     return (
       (n = t && t.getElementsByTagName("parsererror")[0]),
       (t && !n) ||
@@ -4648,6 +4659,7 @@
               (v.crossDomain =
                 Xt.protocol + "//" + Xt.host != r.protocol + "//" + r.host);
           } catch (e) {
+
             v.crossDomain = !0;
           }
         }
@@ -4716,6 +4728,7 @@
           try {
             (h = !1), c.send(a, l);
           } catch (e) {
+
             if (h) throw e;
             l(-1, e);
           }
@@ -4806,6 +4819,7 @@
                         try {
                           t = a(t);
                         } catch (e) {
+
                           return {
                             state: "parsererror",
                             error: a
@@ -4935,7 +4949,8 @@
     (ce.ajaxSettings.xhr = function () {
       try {
         return new ie.XMLHttpRequest();
-      } catch (e) {}
+      } catch (e) {
+}
     });
   var Yt = { 0: 200, 1223: 204 },
     Qt = ce.ajaxSettings.xhr();
@@ -5003,6 +5018,7 @@
             try {
               r.send((i.hasContent && i.data) || null);
             } catch (e) {
+
               if (o) throw e;
             }
           },

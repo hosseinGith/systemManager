@@ -2894,6 +2894,7 @@
       try {
         n.innerHTML = t;
       } catch (e) {
+
         n.innerText = t;
       }
   })(

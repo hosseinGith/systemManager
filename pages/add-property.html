@@ -59,7 +59,7 @@
           </button>
           <ul
             id="menu"
-            style="max-height: 0px; width: 200px;"
+            style="max-height: 0px; width: 200px"
             class="opacity-0 transition-[opacity_max-height] overflow-hidden overflow-x-hidden text-nowrap pointer-events-none duration-700 flex flex-col absolute right-[110px] top-[68px] border-2 border-[#eee] bg-lightMainColor shadow-md"
           >
             <li>
@@ -90,7 +90,7 @@
         </div>
       </section>
     </header>
-    <main class="sm:pt-[100px] pt-[40px]">
+    <main class="">
       <section>
         <form
           onsubmit="submitForm(event)"
@@ -130,59 +130,6 @@
       </section>
     </main>
     <script src="/scripts/main.js?v=1"></script>
-    <script>
-      const form = document.querySelector("form");
-      const loading = document.querySelector(".loading");
-
-      function formData() {
-        let value = {};
-        const inputs = document.querySelectorAll("form input");
-
-        inputs.forEach((item) => {
-          value[item.name] = item.value;
-        });
-        return value;
-      }
-
-      async function submitForm(e) {
-        e.preventDefault();
-        loading.classList.remove("opacity-0");
-        loading.classList.remove("pointer-events-none");
-        try {
-          let res = await (
-            await fetch("/add-property", {
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
-              },
-              body: JSON.stringify(formData()),
-            })
-          ).json();
-          console.log(res);
-          if (res.status)
-            Swal.fire({
-              icon: "success",
-              text: res.message,
-              confirmButtonText: "تایید",
-            });
-          else
-            Swal.fire({
-              icon: "error",
-              text: res.message,
-              confirmButtonText: "تایید",
-            });
-        } catch (e) {
-          Swal.fire({
-            icon: "error",
-            text: "مشکل در سیستم.",
-            confirmButtonText: "تایید",
-          });
-          console.log(e);
-        }
-
-        loading.classList.add("opacity-0");
-        loading.classList.add("pointer-events-none");
-      }
-    </script>
+    <script src="/scripts/add-property.js"></script>
   </body>
 </html>
