@@ -3,8 +3,7 @@ const loading = document.querySelector(".loading");
 const allFormInputs = form.querySelectorAll(
   "input:not([type='hidden']),select:not([type='hidden']),textarea:not([type='hidden'])"
 );
-// Chart.register(zoomPlugin);
-Chart.register(ChartZoom); // دقت کن اسم پلاگین ChartZoom هست
+Chart.register(ChartZoom);
 
 const match = window.location.pathname.match(/\/member\/(\d+)/);
 const userId = match ? Number(match[1]) : null;
@@ -371,24 +370,14 @@ $("#addScoreForm").submit(async (e) => {
         body: JSON.stringify(datas),
       })
     ).json();
-    if (res.status)
-      Swal.fire({
-        icon: "success",
-        text: "عملیات موفق",
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      });
-    else
-      Swal.fire({
-        icon: "error",
-        text: res.message,
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      });
+    Swal.fire({
+      icon: res.status ? "success" : "error",
+      text: res.message,
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
   } catch (error) {
     Swal.fire({
       icon: "error",
@@ -537,6 +526,158 @@ function transformData(allData) {
   return result.sort((a, b) => a.date.localeCompare(b.date));
 }
 
+function showAllScoreMember(res) {
+  let { allData, allBooks } = res.values;
+  console.log(allData);
+
+  if (Object.keys(allData).length === 0)
+    return Swal.fire({
+      icon: "info",
+      text: "این کاربر نمره ای برای پایه انتخاب شده ندارد.",
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
+  allBooks.forEach((item) => {
+    if (!allData[item]) allData[item] = [{ date: "" }];
+  });
+  let row = Object.keys(allData);
+  let transformedData = transformData(allData);
+
+  let th = "";
+  let trs = "";
+  row.forEach((key) => {
+    th += `<th>${key}</th>`;
+  });
+
+  for (let index = 0; index < transformedData.length; index++) {
+    if (transformedData[index].date) {
+      let tr = `<tr>
+    <td>${transformedData[index].date}</td>
+    `;
+      for (const bookName in transformedData[index]) {
+        if (bookName !== "date")
+          tr += `<td>${transformedData[index][bookName] || "--"}</td>`;
+      }
+      tr += `</tr>`;
+
+      trs += tr;
+    }
+  }
+
+  const winHtml = `
+  <!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>${res.values.firstName + " " + res.values.lastName}</title>
+    <style>
+    *{
+    white-space: nowrap;
+    }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0px auto;
+    direction: rtl;
+    font-family: sans-serif;
+    font-size: 13px;
+  }
+
+  th,
+  td {
+    border: 1px solid #999;
+    padding: 8px 12px;
+    text-align: center;
+  }
+     .table2 {
+     }
+  .table2 tbody tr:nth-child(odd) {
+    background-color: #ccc;
+  }
+
+  thead {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  @media print {
+    thead {
+      background-color: #f2f2f2 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+  </head>
+  <body>
+    <div style="margin: auto">
+      <table>
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>نام خانوادگی</th>
+            <th>کلاس</th>
+            <th>تاریخ شروع</th>
+            <th>تا تاریخ</th>
+            <th>سال تحصیلی</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${res.values.firstName}</td>
+            <td>${res.values.lastName}</td>
+            <td>${res.values.educationalBase}</td>
+            <td>${$(".dateFrom").val()}</td>
+            <td>${$(".dateTo").val()}</td>
+            <td dir="ltr">${res.values.educationalDate}</td>
+          </tr>
+        </tbody>
+      </table>
+           <table class="table2">
+    <thead>
+      <tr>
+        <th>تاریخ / درس</th>
+        ${th}
+      </tr>
+    </thead>
+    <tbody>
+    ${trs}
+    </tbody>
+  </table>
+    </div>
+ ${
+   scoreChart
+     ? `   <div style="width:100%;">
+      <a src="${scoreChart?.toBase64Image("image/png")}" download="${
+         res.values.firstName + " " + res.values.lastName
+       }.png">
+       <img style="width:100%;aspect-ratio: 16 / 9;object-fit:contain" src="${scoreChart?.toBase64Image(
+         "image/png"
+       )}" />
+      </a> 
+    </div>`
+     : ""
+ }
+  </body>
+</html>
+`;
+  let newWind = window.open("", "_blank");
+
+  newWind.document.write(winHtml);
+  if (!scoreChart) newWind.print();
+  newWind.document.querySelector("img").onload = () => {
+    newWind.print();
+  };
+  newWind.document.querySelector("img").onerror = () => {
+    newWind.print();
+  };
+  newWind.document.close();
+}
+
+function showYearScoreMember() {}
+
 $("#printButton").click(async () => {
   try {
     let educationalBaseAddScore = $(
@@ -558,6 +699,7 @@ $("#printButton").click(async () => {
       dateFrom,
       dateTo,
       reshteSelect,
+      type: $("#printType").val(),
     };
     const res = await (
       await fetch(`/getAllScoresMember/${userId}`, {
@@ -569,130 +711,9 @@ $("#printButton").click(async () => {
       })
     ).json();
     if (res.status) {
-      let { allData, allBooks } = res.values;
-      console.log(allData.length);
-
-      if (allBooks.length === 0)
-        return Swal.fire({
-          icon: "info",
-          text: "این کاربر نمره ای برای پایه انتخاب شده ندارد.",
-          confirmButtonText: "تایید",
-          customClass: {
-            confirmButton: "button",
-          },
-        });
-      allBooks.forEach((item) => {
-        if (!allData[item]) allData[item] = [{ date: "" }];
-      });
-      console.log(allBooks, allData);
-
-      let row = Object.keys(allData);
-      let transformedData = transformData(allData);
-      let th = "";
-      let trs = "";
-      row.forEach((key) => {
-        th += `<th>${key}</th>`;
-      });
-
-      for (let index = 0; index < transformedData.length; index++) {
-        if (transformedData[index].date) {
-          let tr = `<tr>
-        <td>${transformedData[index].date}</td>
-        `;
-          for (const bookName in transformedData[index]) {
-            if (bookName !== "date")
-              tr += `<td>${transformedData[index][bookName] || "--"}</td>`;
-          }
-          tr += `</tr>`;
-
-          trs += tr;
-        }
+      if ($("#printType").val() === "all") showAllScoreMember(res);
+      else {
       }
-
-      const winHtml = `
-      <!DOCTYPE html>
-    <html lang="fa" dir="rtl">
-      <head>
-        <meta charset="UTF-8" />
-        <title>${allData}</title>
-        <style>
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        margin: 0px auto;
-        direction: rtl;
-        font-family: sans-serif;
-        font-size: 13px;
-      }
-
-      th,
-      td {
-        border: 1px solid #999;
-        padding: 8px 12px;
-        text-align: center;
-      }
-      .table2 tbody tr:nth-child(odd) {
-        background-color: #ccc;
-      }
-
-      thead {
-        background-color: #f2f2f2;
-        font-weight: bold;
-      }
-
-      @media print {
-        thead {
-          background-color: #f2f2f2 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-      }
-    </style>
-      </head>
-      <body>
-        <div style="margin: auto">
-          <table>
-            <thead>
-              <tr>
-                <th>نام</th>
-                <th>نام خانوادگی</th>
-                <th>کلاس</th>
-                <th>تاریخ شروع</th>
-                <th>تا تاریخ</th>
-                <th>سال تحصیلی</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${res.values.firstName}</td>
-                <td>${res.values.lastName}</td>
-                <td>${res.values.educationalBase}</td>
-                <td>${$(".dateFrom").val()}</td>
-                <td>${$(".dateTo").val()}</td>
-                <td dir="ltr">${res.values.educationalDate}</td>
-              </tr>
-            </tbody>
-          </table>
-               <table class="table2">
-        <thead>
-          <tr>
-            <th>تاریخ / درس</th>
-            ${th}
-          </tr>
-        </thead>
-        <tbody>
-        ${trs}
-        </tbody>
-      </table>
-        </div>
-      </body>
-    </html>
- `;
-      let newWind = window.open("", "_blank");
-
-      newWind.document.write(winHtml);
-      newWind.print();
-      newWind.document.close();
     } else
       Swal.fire({
         icon: "error",

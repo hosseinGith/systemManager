@@ -5,6 +5,7 @@ import {
   set_data_in_database,
   verifyToken,
 } from "../core/utils.mjs";
+import { books } from "../core/settings.mjs";
 
 const getScores = async (req, res) => {
   const { id } = req.params;
@@ -39,7 +40,7 @@ const getScores = async (req, res) => {
       });
 
     let values_res = await set_data_in_database(
-      `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? AND bookName =BINARY ?`,
+      `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? AND bookName =BINARY ? `,
       [decryptMessage(member_res.nationalId), data.bookName]
     );
     if (!values_res)
@@ -58,7 +59,11 @@ const getScores = async (req, res) => {
       if (
         moment(item.date, type).diff(moment(data.dateFrom, type), "days") >=
           0 &&
-        moment(data.dateTo, type).diff(moment(item.date, type), "days") >= 0
+        moment(data.dateTo, type).diff(moment(item.date, type), "days") >= 0 &&
+        Object.keys(books).findIndex((it) => it === item.educationalBase) >=
+          Object.keys(books).findIndex(
+            (it) => it === data.educationalBaseAddScore
+          )
       ) {
         values.date.push(item.date);
         values.score.push(item.score);

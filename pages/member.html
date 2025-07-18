@@ -1388,7 +1388,8 @@
                     class="w-full input requestScoreType"
                     type="text"
                   >
-                    <option value="mostamar">مستمر</option>
+                    <option value="mostamarClass">مستمر کلاسی</option>
+                    <option value="mostamar">مستمر کارنامه</option>
                     <option value="middleOwn">نوبت اول</option>
                     <option value="middleTow">نوبت دوم</option>
                   </select>
@@ -1561,15 +1562,16 @@
                 </div>
                 <div class="py-4">
                   <button class="button" type="submit">نمایش نمودار</button>
+                  <button class="button bg-gray-700" type="submit">حذف نمودار</button>
                 </div>
               </fieldset>
             </form>
             <div
-              class="sm:px-8 w-full flex justify-center bg-[#0f2d81] h-0 overflow-hidden flex-col "
+              class="sm:px-8 w-full flex justify-center bg-[#0f2d81] h-0 overflow-hidden flex-col"
               id="canvasCont"
             >
               <p class="py-4 bg-white">
-                <span>تعداد نتایج :</span>  
+                <span>تعداد نتایج :</span>
                 <span id="pcsResult"></span>
               </p>
               <canvas class="w-full bg-white h-[300px]"></canvas>
