@@ -73,7 +73,7 @@ async function backupDatabaseToSQL({ database, outputFile }) {
   fs.writeFileSync(outputFile, sqlDump);
 }
 
-async function sendEmailWithAttachment(mailOptions) {
+async function sendEmailWithAttachment(mailOptions, isBackUp = false) {
   const transporter = nodemailer.createTransport({
     host: "maktababadan.ir",
     port: 587,
@@ -84,15 +84,14 @@ async function sendEmailWithAttachment(mailOptions) {
     },
   });
   transporter.sendMail(mailOptions, (error, info) => {
+    if (!isBackUp) return;
     if (error) {
       return console.log("Error sending email:", error);
     }
-    console.log("sended");
     set_data_in_database(
       "INSERT INTO `backup`(`backups`) VALUES (CURRENT_TIMESTAMP)"
     );
   });
-  console.log("sending");
 }
 
 const calculateDaysPassed = (inputDate) => {
@@ -131,7 +130,7 @@ async function getBackUp() {
     ],
   };
   await backupDatabaseToSQL(dbConfig);
-  await sendEmailWithAttachment(mailOptions);
+  await sendEmailWithAttachment(mailOptions, true);
   return true;
 }
 

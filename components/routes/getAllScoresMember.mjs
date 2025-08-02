@@ -13,6 +13,7 @@ function samAObject(scores, item) {
       mostamarClass: { value: 0, numberOfIncress: 0 },
       mostamar: { value: 0, numberOfIncress: 0 },
       middleOwn: { value: 0, numberOfIncress: 0 },
+      mostamarTow: { value: 0, numberOfIncress: 0 },
       middleTow: { value: 0, numberOfIncress: 0 },
     };
   }
@@ -24,7 +25,8 @@ function samAObject(scores, item) {
 
 const getAllScoresMember = async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
+  const data = req.query;
+
   try {
     let user_res;
     let cookieUser = {};
@@ -54,16 +56,16 @@ const getAllScoresMember = async (req, res) => {
 
     member_res.firstName = decryptMessage(member_res.firstName);
     member_res.lastName = decryptMessage(member_res.lastName);
-    member_res.educationalBase = decryptMessage(member_res.educationalBase);
     member_res.nationalId = decryptMessage(member_res.nationalId);
     member_res.reshte = decryptMessage(member_res.reshte);
 
-    let reshteBooks = books[member_res.educationalBase];
+    let reshteBooks = books[data.educationalBaseAddScore];
 
     if (
       data.reshteSelect &&
-      Object.keys(books).findIndex((it) => it === member_res.educationalBase) >=
-        10
+      Object.keys(books).findIndex(
+        (it) => it === member_res.educationalBaseAddScore
+      ) >= 10
     )
       reshteBooks = reshteBooks[data.reshteSelect];
 
@@ -156,6 +158,9 @@ const getAllScoresMember = async (req, res) => {
 
         scores[item].mostamar =
           scores[item].mostamar.value / scores[item].mostamar.numberOfIncress;
+
+        scores[item].mostamarTow =
+          scores[item].mostamarTow.value / scores[item].mostamarTow.numberOfIncress;
 
         scores[item].middleOwn =
           scores[item].middleOwn.value / scores[item].middleOwn.numberOfIncress;

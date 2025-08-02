@@ -33,6 +33,7 @@ async function submitForm(e) {
   }
 
   body["member_image_url"] = member_image_url;
+
   try {
     let res = await (
       await fetch("/submitNewMember", {
@@ -70,7 +71,6 @@ async function submitForm(e) {
 
 async function getColumns() {
   openCloseLoader("open");
-
   try {
     let res = await (await fetch("/columns")).json();
     if (res.status) {

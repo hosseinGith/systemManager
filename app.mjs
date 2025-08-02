@@ -38,30 +38,30 @@ app.post(
   async (req, res) => signin(req, res)
 );
 
-app.post("*/search", [], async (req, res) => search(req, res));
-
 app.post("*/submitNewMember", [], async (req, res) =>
   submitNewMember(req, res)
 );
 
-app.post("*/add-property", [], async (req, res) => addProperty(req, res));
-
-app.post("*/edit-member/:id", async (req, res) => editMember(req, res));
-
-app.post("*/getMemebrData", async (req, res) => getMemebrData(req, res));
-
-app.post("*/getMemebrsData/chart", async (req, res) =>
-  getMemebrsData(req, res)
-);
 app.post("*/addUserBookScore/:id", async (req, res) =>
   addUserBookScore(req, res)
 );
 
 app.post("*/upload", async (req, res) => upload(req, res));
-app.post("*/getScores/:id", async (req, res) => getScores(req, res));
-app.post("*/getAllScoresMember/:id", async (req, res) =>
+
+app.put("*/add-property", [], async (req, res) => addProperty(req, res));
+
+app.patch("*/edit-member/:id", async (req, res) => editMember(req, res));
+
+app.get("*/getMemebrsData/chart", async (req, res) => getMemebrsData(req, res));
+
+app.get("*/getMemebrData", async (req, res) => getMemebrData(req, res));
+
+app.get("*/getScores/:id", async (req, res) => getScores(req, res));
+app.get("*/getAllScoresMember/:id", async (req, res) =>
   getAllScoresMember(req, res)
 );
+app.get("*/getDataSearch", [], async (req, res) => search(req, res));
+
 app.get("*/getFile/:fileName", async (req, res) => getFile(req, res));
 
 app.get("*/login", (req, res) => login(req, res));

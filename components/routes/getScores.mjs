@@ -9,7 +9,7 @@ import { books } from "../core/settings.mjs";
 
 const getScores = async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
+  const data = req.query;
   try {
     let user_res;
     let cookieUser = {};
@@ -43,6 +43,8 @@ const getScores = async (req, res) => {
       `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? AND bookName =BINARY ? `,
       [decryptMessage(member_res.nationalId), data.bookName]
     );
+    console.log(values_res, data);
+
     if (!values_res)
       return res.status(404).json({
         status: false,

@@ -18,15 +18,9 @@ let memebr;
   columns?.forEach((item) => {
     if (typeof item.value === "string") item.value = JSON.parse(item.value);
   });
-  memebr = await (
-    await fetch("/getMemebrData", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ id: userId }),
-    })
-  ).json();
+  let datas_query = convertToQuery({ id: userId });
+
+  memebr = await (await fetch("/getMemebrData?" + datas_query)).json();
 
   Object.keys(memebr)?.forEach((key) => {
     if (document.querySelector(`[name="${key}"]`))
@@ -129,7 +123,7 @@ async function submitForm(e) {
       server_image_url = member_image_url;
       let res = await (
         await fetch("/edit-member/" + userId, {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-type": "application/json",
           },
@@ -157,15 +151,9 @@ async function submitForm(e) {
           document.querySelector('[name="firstName"]').value +
           " " +
           document.querySelector('[name="lastName"]').value;
-        memebr = await (
-          await fetch("/getMemebrData", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify({ id: userId }),
-          })
-        ).json();
+        let datas_query = convertToQuery({ id: userId });
+
+        memebr = await (await fetch("/getMemebrData?" + datas_query)).json();
         if (memebr.schoolSift === "صبح" || memebr.schoolSift === "عصر") {
           generateWeeks(memebr.dateSchoolSift, memebr.schoolSift === "صبح");
           document.querySelector("#shiftCont").style.display = "";
@@ -409,6 +397,7 @@ $("#addScoreForm").submit(async (e) => {
     });
   }
 });
+
 async function showChart() {
   let educationalBaseAddScore = $(`#showChartForm .educationalBaseAddScore`)[0]
       .value,
@@ -430,15 +419,12 @@ async function showChart() {
     reshteSelect,
   };
   try {
+    let datas_query = convertToQuery(datas);
+
     const res = await (
-      await fetch(`/getScores/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(datas),
-      })
+      await fetch(`/getScores/${userId}?${datas_query}`)
     ).json();
+
     if (scoreChart) scoreChart.destroy();
 
     if (res.status) {
@@ -610,7 +596,6 @@ function showAllScoreMember(res) {
   });
 
   table.appendChild(tbody);
-  console.log(table.innerHTML);
 
   const winHtml = `
   <!DOCTYPE html>
@@ -678,15 +663,29 @@ function showAllScoreMember(res) {
      `
      : ""
  }
+ <div style="
+    position: fixed;
+    left: 20px;
+    top: 35%;
+    transform: translateY(50%);
+    padding: 10px;
+    font-size: 19px;
+    background: #1676d2;
+    border: 0;
+    border-radius: 16px;
+    color: #fff;
+    cursor: pointer;
+    " id="printButton">پرینت گرفتن</div>
+
  <script>
  
-  function loadImage() {
-    newWind.print();
-  }
-  function errorImage(img) {
-    img.remove();
-    newWind.print();
-  }
+  document
+    .querySelector("#printButton")
+    .addEventListener("click", () => {
+      document.querySelector("#printButton").style.display = "none";
+      window.print();
+      document.querySelector("#printButton").style.display = "";
+    });
  </script>
   </body>
 </html>
@@ -694,7 +693,6 @@ function showAllScoreMember(res) {
   let newWind = window.open("", "_blank");
 
   newWind.document.write(winHtml);
-  if (!scoreChart) newWind.print();
 
   newWind.document.close();
 }
@@ -734,6 +732,7 @@ function showScoreAOwnYear(res) {
       middleOwn: null,
       middleTow: null,
       mostamarClass: null,
+      mostamarTow: null,
     };
   });
   const newScores = { ...scores, ...newBooks };
@@ -750,9 +749,11 @@ function showScoreAOwnYear(res) {
               newScores[item].middleOwn ? newScores[item].middleOwn : "---"
             }</td>
             <td>${
+              newScores[item].mostamarTow ? newScores[item].mostamarTow : "---"
+            }</td>
+            <td>${
               newScores[item].middleTow ? newScores[item].middleTow : "---"
             }</td>
-            <td>---</td>
           </tr>
     `;
   });
@@ -779,6 +780,7 @@ function showScoreAOwnYear(res) {
         padding: 30px;
         border: 2px solid #333;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position:relative;
       }
 
       .header {
@@ -827,6 +829,13 @@ function showScoreAOwnYear(res) {
   </head>
   <body>
     <div class="report-card">
+      ${
+        server_image_url || member_image_url
+          ? `<img src="${
+              server_image_url || member_image_url
+            }" style="left:10px;top:10px;position:absolute;width: 120px;height: 120px;aspect-ratio: 3 / 4;object-fit: contain;" />`
+          : ""
+      }
       <div class="header">
         <h1>کارنامه تحصیلی</h1>
         <p>سال تحصیلی: ۱۴۰۴-۱۴۰۳</p>
@@ -844,10 +853,10 @@ function showScoreAOwnYear(res) {
           <tr>
             <th>ردیف</th>
             <th>نام درس</th>
-            <th>نمره مستمر</th>
-            <th>نمره پایانی</th>
-            <th>نمره کل</th>
-            <th>وضعیت</th>
+            <th>مستمر نوبت اول</th>
+            <th>نوبت اول</th>
+            <th>مستمر نوبت دوم</th>
+            <th>نوبت دوم</th>
           </tr>
         </thead>
         <tbody>
@@ -860,19 +869,44 @@ function showScoreAOwnYear(res) {
         <p><strong>نتیجه:</strong> ---</p>
       </div>
     </div>
+    <div style="
+    position: fixed;
+    left: 20px;
+    top: 35%;
+    transform: translateY(50%);
+    padding: 10px;
+    font-size: 19px;
+    background: #1676d2;
+    border: 0;
+    border-radius: 16px;
+    color: #fff;
+    cursor: pointer;
+" id="printButton">پرینت گرفتن</div>
+<script>
+  document
+    .querySelector("#printButton")
+    .addEventListener("click", () => {
+      document.querySelector("#printButton").style.display = "none";
+      window.print();
+      document.querySelector("#printButton").style.display = "";
+    });
+</script>
   </body>
 </html>
 
 `;
   let newWind = window.open("", "_blank");
 
+  newWind.addEventListener("blur", () => {
+    newWind.document.querySelector("#printButton").style.display = "none";
+  });
+  newWind.addEventListener("focus", () => {
+    newWind.document.querySelector("#printButton").style.display = "";
+  });
   newWind.document.write(winHtml);
-  if (!scoreChart) newWind.print();
 
   newWind.document.close();
 }
-
-function showYearScoreMember() {}
 
 $("#printButton").click(async () => {
   try {
@@ -897,14 +931,11 @@ $("#printButton").click(async () => {
       reshteSelect,
       type: $("#printType").val(),
     };
+
+    let datas_query = convertToQuery(datas);
+
     const res = await (
-      await fetch(`/getAllScoresMember/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(datas),
-      })
+      await fetch(`/getAllScoresMember/${userId}?${datas_query}`)
     ).json();
     if (res.status) {
       if ($("#printType").val() === "all") showAllScoreMember(res);

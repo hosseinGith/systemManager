@@ -27,7 +27,6 @@ const editMember = async (req, res) => {
         res.cookie("users", "");
         user_res = "";
       }
-    console.log(req.body);
 
     let member_res = await (
       await set_data_in_database(

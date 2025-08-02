@@ -6,7 +6,7 @@ import {
 } from "../core/utils.mjs";
 
 const getMemebrData = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.query;
   try {
     let user_res;
     let cookieUser = {};
@@ -24,9 +24,11 @@ const getMemebrData = async (req, res) => {
         res.cookie("users", "");
         user_res = "";
       }
+
     let member_res = await (
       await set_data_in_database(`SELECT * FROM members WHERE id=?`, [id])
     )[0];
+
     Object.keys(member_res).forEach((item) => {
       if (item !== "id") member_res[item] = decryptMessage(member_res[item]);
     });

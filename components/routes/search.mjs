@@ -6,7 +6,7 @@ import {
 } from "../core/utils.mjs";
 
 const search = async (req, res) => {
-  let { textSearch, type } = req.body;
+  let { textSearch, type } = req.query;
 
   const cookies = req.headers.cookie;
   let client_cookie = {};
@@ -34,7 +34,9 @@ const search = async (req, res) => {
     let members_ress;
     let start = 0;
     let plus = 100;
-    if (req.body.start) start = req.body.start;
+
+    if (req.query.start > 0) start = req.query.start;
+
     if (type == "id") {
       members_ress = await set_data_in_database(`SELECT * FROM members`);
     } else if (!textSearch && type !== "lastYearGPA") {

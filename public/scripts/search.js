@@ -24,17 +24,9 @@ async function search(val, start = 0) {
   oldSearch = val;
   try {
     let res = await (
-      await fetch("/search", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          textSearch: val,
-          start: start,
-          type: type.value,
-        }),
-      })
+      await fetch(
+        `/getDataSearch?textSearch=${val}&start=${start}&type=${type.value}`
+      )
     ).json();
 
     if (!columns) {
@@ -116,7 +108,11 @@ function createLi(data, columns) {
   id:
   <div style="display:flex;align-items:center;gap:4px">
   <span>${data.id}</span>
-  <img style="width:${!data.member_image_url?"0":"80px"};height:80px;aspcet-ratio:3 / 4; object-fit:contain;opacity:${!data.member_image_url?"0":""};" src="${data.member_image_url}" />
+  <img style="width:${
+    !data.member_image_url ? "0" : "80px"
+  };height:80px;aspcet-ratio:3 / 4; object-fit:contain;opacity:${
+    !data.member_image_url ? "0" : ""
+  };" src="${data.member_image_url}" />
   </div>
   `;
 

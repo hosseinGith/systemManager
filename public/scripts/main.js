@@ -3,6 +3,11 @@ const menu = document.querySelector("#menu");
 const showMenu = document.querySelector("#showMenu");
 let booksArray = [];
 let member_image_url;
+function convertToQuery(datas) {
+  let query= Object.keys(datas).map((item) => (item = item + "=" + datas[item])).join('&');
+
+  return query
+}
 async function deleteUser(id) {
   loading.classList.remove("opacity-0");
   loading.classList.remove("pointer-events-none");
