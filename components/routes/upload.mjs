@@ -75,7 +75,7 @@ const upload = async (req, res) => {
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
 شناسه عکس : ${`https://members.maktababadan.ir/getFile/${eecoded_url}`}
-ایدی ادمین : ${user_res.username}
+آیدی ادمین : ${user_res.username}
 اضافه شد
 `
         );

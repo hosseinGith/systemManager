@@ -39,6 +39,7 @@ const submitNewMember = async (req, res) => {
         return;
       }
       let keyOfObject = ["editedBy"];
+      let dec_values = [];
       let isAllow = { status: true, message: "" };
       for (const key in req.body) {
         if (
@@ -52,7 +53,14 @@ const submitNewMember = async (req, res) => {
                 key === "dateSchoolSift" ? "شیفت" : "تاریخ تولد"
               } نا معتبر است.`,
             };
-          } else keyOfObject.push(key);
+          } else {
+            keyOfObject.push(key);
+
+            let data = req.body[key];
+            if (key === "member_image_url")
+              data = "https://members.maktababadan.ir" + data;
+            dec_values.push(`${key} = ${data}`);
+          }
           if (key === "dateSchoolSift")
             if (moment(req.body[key], "jYYYY/jMM/jDD").weekday() === 5) {
               isAllow = {
@@ -63,6 +71,10 @@ const submitNewMember = async (req, res) => {
             }
         } else if (req.body[key]) {
           keyOfObject.push(key);
+          let data = req.body[key];
+          if (key === "member_image_url")
+            data = "https://members.maktababadan.ir" + data;
+          dec_values.push(`${key} = ${data}`);
         }
       }
       if (!isAllow.status)
@@ -74,7 +86,7 @@ const submitNewMember = async (req, res) => {
         `INSERT INTO members(${keyOfObject.join(",")}) VALUES(
     ${keyOfObject
       .map((item, index) => {
-        return (item = "?");
+        return "?";
       })
       .join(",")}
 )
@@ -91,12 +103,12 @@ const submitNewMember = async (req, res) => {
         res.status(404).json({ message: `مشکل در سیستم.`, status: false });
         return;
       }
-      user_res = await modifyUser(
+      let user_res_new = await modifyUser(
         encryptMessage(req.body.nationalId),
         user_res.username,
         1
       );
-      if (!user_res) {
+      if (!user_res_new) {
         res.status(404).json({ message: `مشکل در سیستم.`, status: false });
         return;
       }
@@ -119,10 +131,15 @@ const submitNewMember = async (req, res) => {
 
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
-کاربر : ${req.body.firstName + " " + req.body.lastName}
-ایدی : ${req.body.nationalId}
-ایدی ادمین : ${user_res.username}
+عضو : ${req.body.firstName + " " + req.body.lastName}
+کد ملی : ${req.body.nationalId}
+آیدی ادمین : ${user_res.username}
 اضافه شد
+
+توضیحات راجب مقادیر اضافه شده:
+
+${dec_values.join("\n ➖➖➖➖➖➖➖ \n")}
+
 `,
         ""
       );

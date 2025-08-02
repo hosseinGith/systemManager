@@ -30,6 +30,7 @@ const editMember = async (req, res) => {
         message: "کاربر یافت نشد.",
       });
     }
+    let dec_values = [];
     let values = [];
     let columns = [];
     let isAllow = { status: true, message: "" };
@@ -47,6 +48,10 @@ const editMember = async (req, res) => {
             };
           } else {
             let value = req.body[item];
+            if (item === "member_image_url")
+              data = "https://members.maktababadan.ir" + data;
+            dec_values.push(`${item} = ${data}`);
+            
             value = encryptMessage(value);
             columns.push(`${item} = ?`);
             values.push(value);
@@ -69,6 +74,12 @@ const editMember = async (req, res) => {
           }
         } else {
           let value = req.body[item];
+          let data = value;
+          if (item === "member_image_url")
+            data = "https://members.maktababadan.ir" + data;
+
+          dec_values.push(`${item} = ${data}`);
+
           value = encryptMessage(value);
           columns.push(`${item} = ?`);
           values.push(value);
@@ -81,26 +92,31 @@ const editMember = async (req, res) => {
     let query = `UPDATE members SET ${columns.join(", ")}  WHERE id = ?;`;
 
     let edit_res = await set_data_in_database(query, [...values, memberId]);
-    user_res = await modifyUser(
+    let user_res_new = await modifyUser(
       encryptMessage(req.body.nationalId),
       user_res.username,
       1
     );
-    if (edit_res.affectedRows > 0 && user_res) {
+    if (edit_res.affectedRows > 0 && user_res_new) {
       res.status(200).json({ status: true });
       sendEmailUserSubmited(
         `
 ویرایش کردن عضو ✅
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
-کاربر ${
+عضو : ${
           decryptMessage(member_res.firstName) +
           " " +
           decryptMessage(member_res.lastName)
         }
-با ایدی ${decryptMessage(member_res.nationalId)}
-ایدی ادمین : ${user_res.username}
+کد ملی : ${decryptMessage(member_res.nationalId)}
+آیدی ادمین : ${user_res.username}
 ویرایش شد
+
+توضیحات درباره تغییرات:
+
+${dec_values.join("\n ➖➖➖➖➖➖➖ \n")}
+
         `
       );
     } else {

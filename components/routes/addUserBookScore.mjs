@@ -61,16 +61,20 @@ const addUserBookScore = async (req, res) => {
         });
         sendEmailUserSubmited(
           `
-ویرایش کردن عضو ✅
+ویرایش کردن نمره ی عضو ✅
 
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
 نمره : ${datas.scoreInput} 
 کتاب : ${datas.bookName} 
-پایه : ${datas.educationalBaseAddScore}
+پایه : ${datas.educationalBaseAddScore} ${
+            datas.reshteSelect ? `\n رشته : ${datas.reshteSelect}` : ""
+          }
+نوع نمره : ${datas.scoreType}
+تاریخ : ${datas.dateBookQuestion}
 عضو : ${member_res.firstName + " " + member_res.lastName}
-ایدی عضو : ${decryptMessage(member_res.nationalId)}
-ایدی ادمین : ${user_res.username}
+آیدی عضو : ${decryptMessage(member_res.nationalId)}
+آیدی ادمین : ${user_res.username}
 ویرایش شد
           `
         );
@@ -98,12 +102,16 @@ const addUserBookScore = async (req, res) => {
 
 نمره : ${datas.scoreInput} 
 کتاب :  ${datas.bookName} 
-پایه :  ${datas.educationalBaseAddScore}
+پایه :  ${datas.educationalBaseAddScore} ${
+        datas.reshteSelect ? `\n رشته : ${datas.reshteSelect}` : ""
+      }
+نوع نمره : ${datas.scoreType}
+تاریخ : ${datas.dateBookQuestion}
 عضو : ${member_res.firstName + member_res.lastName}
-ایدی : ${decryptMessage(member_res.nationalId)}
-ایدی ادمین : ${user_res.username}
+کد ملی : ${decryptMessage(member_res.nationalId)}
+آیدی ادمین : ${user_res.username}
 اضافه شد
- `
+`
     );
     res.status(200).json({
       status: true,

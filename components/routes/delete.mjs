@@ -2,6 +2,7 @@ import {
   checkUserAthu,
   decryptMessage,
   encryptMessage,
+  errorHand,
   modifyUser,
   sendEmailUserSubmited,
   set_data_in_database,
@@ -30,12 +31,12 @@ const deleteFun = async (req, res) => {
     `DELETE FROM members WHERE id=?`,
     [id]
   );
-  user_res = await modifyUser(
+  let user_res_new = await modifyUser(
     encryptMessage(req.body.nationalId),
     user_res.username,
     0
   );
-  if (deleteMessage_res.affectedRows > 0 && user_res) {
+  if (deleteMessage_res.affectedRows > 0 && user_res_new) {
     res.status(200).json({
       status: true,
     });
@@ -45,18 +46,18 @@ const deleteFun = async (req, res) => {
 
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
-کاربر : ${
+عضو : ${
         decryptMessage(member_res.firstName) +
         " " +
         decryptMessage(member_res.lastName)
       }
-ایدی : ${decryptMessage(member_res.nationalId)}
-ایدی ادمین : ${user_res.username}
-حذف شد
-      `,
+کد ملی : ${decryptMessage(member_res.nationalId)}
+آیدی ادمین : ${user_res.username}
+حذف شد ❌`,
       ""
     );
   } else {
+    errorHand();
     res.status(406).json({
       status: false,
       message: "کاربر حذف نشد.",

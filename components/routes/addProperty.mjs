@@ -51,7 +51,9 @@ const addProperty = async (req, res) => {
       sendEmailUserSubmited(
         `
 پارامتر 📦
+
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
 پارامتر جدید در صفحه اصلی اضافه شد`
       );
       res.status(200).json({ status: true, message: "ستون اضافه شد." });

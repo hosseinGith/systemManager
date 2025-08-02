@@ -285,7 +285,15 @@ async function modifyUser(nationalId, username, isEdit) {
   return user_res;
 }
 const errorHand = (e) => {
-  console.error(e);
+  if (e) console.error(e);
+  sendEmailUserSubmited(
+    `
+   ⚠⚠⚠⚠ مشکل در سیستم ⚠⚠⚠⚠
+   ---------------------------
+   |${e ? `خطا : \n ${e}` : ""} |
+   ---------------------------
+    `
+  );
 };
 
 const checkUserAthu = async (req, res) => {
