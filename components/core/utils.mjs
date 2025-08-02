@@ -84,15 +84,15 @@ async function sendEmailWithAttachment(mailOptions, isBackUp = false) {
       pass: process.env.EMAIL_PASS,
     },
   });
-  
+
   transporter.sendMail(mailOptions, (error, info) => {
-    if (!isBackUp) return;
     if (error) {
       return console.log("Error sending email:", error);
     }
-    set_data_in_database(
-      "INSERT INTO `backup`(`backups`) VALUES (CURRENT_TIMESTAMP)"
-    );
+    if (isBackUp)
+      set_data_in_database(
+        "INSERT INTO `backup`(`backups`) VALUES (CURRENT_TIMESTAMP)"
+      );
   });
 }
 
