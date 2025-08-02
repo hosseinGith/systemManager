@@ -86,7 +86,6 @@ const upload = async (req, res) => {
         status: false,
         message: "مقادیر را پر کنید.",
       });
-    user = null;
   } catch (e) {
     errorHand(e);
     res.status(500).json({ error: "مشکل در سیستم" });

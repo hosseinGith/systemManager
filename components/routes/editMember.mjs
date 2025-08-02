@@ -23,7 +23,8 @@ const editMember = async (req, res) => {
         [memberId]
       )
     )[0];
-    if (member_res.nationalId) {
+
+    if (!member_res.nationalId) {
       return res.status(404).json({
         status: false,
         message: "کاربر یافت نشد.",
