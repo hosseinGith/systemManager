@@ -312,14 +312,22 @@ const checkUserAthu = async (req, res) => {
     return res.status(401).send("دوباره لاگین کنید");
   }
 };
-const sendEmailUserSubmited = (text) => {
-  const mailOptions = {
-    from: "info@backup.com",
-    to: "hosseinderees7@gmail.com",
-    subject: "اعلان ثبت در members",
-    text: text,
-  };
-  sendEmailWithAttachment(mailOptions);
+const sendImageFileToApi = (file, caption, title) => {
+  fetch(process.env.eitaaApi + "/sendMessage", {
+    method: "POST",
+    body: JSON.stringify({
+      chat_id: process.env.chat_id,
+      file,
+      title,
+      caption,
+    }),
+  });
+};
+const sendEmailUserSubmited = (text, title = "") => {
+  fetch(process.env.eitaaApi + "/sendMessage", {
+    method: "POST",
+    body: JSON.stringify({ chat_id: process.env.chat_id, title, text }),
+  });
 };
 export {
   hashPassword,
@@ -339,4 +347,5 @@ export {
   errorHand,
   checkUserAthu,
   sendEmailUserSubmited,
+  sendImageFileToApi,
 };

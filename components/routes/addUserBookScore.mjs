@@ -60,13 +60,18 @@ const addUserBookScore = async (req, res) => {
           message: "نمره ویرایش شد.",
         });
         sendEmailUserSubmited(
-          `نمره ${datas.scoreInput} 
-          در کتاب ${datas.bookName} 
-          در پایه ${datas.educationalBaseAddScore}
-          به کاربر ${member_res.firstName + " " + member_res.lastName}
-          با ایدی ${decryptMessage(member_res.nationalId)}
-          توسط ${user_res.username}
-          ویرایش شد
+          `
+ویرایش کردن عضو ✅
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+نمره : ${datas.scoreInput} 
+کتاب : ${datas.bookName} 
+پایه : ${datas.educationalBaseAddScore}
+عضو : ${member_res.firstName + " " + member_res.lastName}
+ایدی عضو : ${decryptMessage(member_res.nationalId)}
+ایدی ادمین : ${user_res.username}
+ویرایش شد
           `
         );
         return;
@@ -86,14 +91,19 @@ const addUserBookScore = async (req, res) => {
     );
 
     sendEmailUserSubmited(
-      `نمره ${datas.scoreInput} 
-      در کتاب ${datas.bookName} 
-      در پایه ${datas.educationalBaseAddScore}
-      به کاربر ${member_res.firstName + member_res.lastName}
-      با ایدی ${decryptMessage(member_res.nationalId)}
-      توسط ${user_res.username}
-      اضافه شد
       `
+اضافه کردن عضو ✅
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+نمره : ${datas.scoreInput} 
+کتاب :  ${datas.bookName} 
+پایه :  ${datas.educationalBaseAddScore}
+عضو : ${member_res.firstName + member_res.lastName}
+ایدی : ${decryptMessage(member_res.nationalId)}
+ایدی ادمین : ${user_res.username}
+اضافه شد
+ `
     );
     res.status(200).json({
       status: true,

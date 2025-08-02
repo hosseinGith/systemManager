@@ -114,11 +114,17 @@ const submitNewMember = async (req, res) => {
         status: true,
       });
       sendEmailUserSubmited(
-        `کاربر ${req.body.firstName + " " + req.body.lastName}
-          با ایدی ${req.body.nationalId}
-          توسط ${user_res.username}
-          اضافه شد
-          `
+        `
+اضافه کردن عضو ✅
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+کاربر : ${req.body.firstName + " " + req.body.lastName}
+ایدی : ${req.body.nationalId}
+ایدی ادمین : ${user_res.username}
+اضافه شد
+`,
+        ""
       );
     } else res.status(404).json({ message: `کاربر یافت نشد.`, status: false });
   } catch (e) {

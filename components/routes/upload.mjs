@@ -69,10 +69,15 @@ const upload = async (req, res) => {
           url: `/getFile/${eecoded_url}`,
         });
         sendEmailUserSubmited(
-          `عکس با شناسه ${`/getFile/${eecoded_url}`}
-            توسط ${user_res.username}
-            اضافه شد
-            `
+          ` 
+اضافه کردن عکس 🖼 📸
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+شناسه عکس : ${`https://members.maktababadan.ir/getFile/${eecoded_url}`}
+ایدی ادمین : ${user_res.username}
+اضافه شد
+`
         );
       } catch (e) {
         errorHand(e);

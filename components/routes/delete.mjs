@@ -40,15 +40,21 @@ const deleteFun = async (req, res) => {
       status: true,
     });
     sendEmailUserSubmited(
-      `کاربر ${
+      `
+حذف کردن عضو ✅
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+کاربر : ${
         decryptMessage(member_res.firstName) +
         " " +
         decryptMessage(member_res.lastName)
       }
-      با ایدی ${decryptMessage(member_res.nationalId)}
-      توسط ${user_res.username}
-      حذف شد
-      `
+ایدی : ${decryptMessage(member_res.nationalId)}
+ایدی ادمین : ${user_res.username}
+حذف شد
+      `,
+      ""
     );
   } else {
     res.status(406).json({

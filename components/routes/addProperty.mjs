@@ -48,7 +48,12 @@ const addProperty = async (req, res) => {
         return res.status(406).json({
           message: "مشکل در سیستم.",
         });
-      sendEmailUserSubmited("عنصر جدید در صفحه اصلی اضافه شد");
+      sendEmailUserSubmited(
+        `
+پارامتر 📦
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+پارامتر جدید در صفحه اصلی اضافه شد`
+      );
       res.status(200).json({ status: true, message: "ستون اضافه شد." });
     } else {
       res.status(400).json({ status: false, message: "ستون تعریف شده است." });
