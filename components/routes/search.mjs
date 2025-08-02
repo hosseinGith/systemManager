@@ -1,5 +1,9 @@
 import { cookie, moment } from "../core/settings.mjs";
-import { decryptMessage, set_data_in_database, verifyToken } from "../core/utils.mjs";
+import {
+  decryptMessage,
+  set_data_in_database,
+  verifyToken,
+} from "../core/utils.mjs";
 
 const search = async (req, res) => {
   let { textSearch, type } = req.body;
@@ -35,7 +39,7 @@ const search = async (req, res) => {
       members_ress = await set_data_in_database(`SELECT * FROM members`);
     } else if (!textSearch && type !== "lastYearGPA") {
       members_ress = await set_data_in_database(
-        `SELECT firstName,lastName,fatherName ,birthDayDate,educationalBase,teacherName,nationalId,number,id FROM members LIMIT ${plus} OFFSET ?
+        `SELECT firstName,lastName,fatherName ,birthDayDate,educationalBase,teacherName,nationalId,number,id,member_image_url FROM members LIMIT ${plus} OFFSET ?
       `,
         [start]
       );
@@ -110,7 +114,7 @@ const search = async (req, res) => {
               const item = members_ress[index];
               let object = {};
               item[type] = String(decryptMessage(item[type]));
-              let now = moment(item[type], "jYYYY/jMM/jDD");
+              let now = moment(item[type], "jYYYY/jMM/jDD", "fa", true);
 
               let dayName = now
                 .format("dddd")
@@ -189,7 +193,12 @@ const search = async (req, res) => {
                     }
                   }
                 }
-                const birthDate = moment(item[type], "jYYYY/jMM/jDD");
+                const birthDate = moment(
+                  item[type],
+                  "jYYYY/jMM/jDD",
+                  "fa",
+                  true
+                );
                 const today = moment();
 
                 const years = today.diff(birthDate, "years");

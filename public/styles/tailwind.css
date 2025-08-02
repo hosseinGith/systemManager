@@ -3,76 +3,76 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --darkMainColor: "#262e34";
-        --darkMainColor2: "#18191d";
-        --darkMainTextColor: "#fff";
-        --lightMainColor: "#262e34";
-        --lightMainTextColor: "#000";
-        --mainColor: "#262e34";
-        --mainColor2: "#45b5ff";
-        --mainTextColor: "#000";
-    }
-    @font-face {
-        font-family: iranYekan;
-        src: url('../assets/fonts/iranyekan-regular.woff2') format('woff2'),
-            url('../assets/fonts/iranyekan-regular.woff2') format('woff2');
-    }
+  :root {
+    --darkMainColor: "#262e34";
+    --darkMainColor2: "#18191d";
+    --darkMainTextColor: "#fff";
+    --lightMainColor: "#262e34";
+    --lightMainTextColor: "#000";
+    --mainColor: "#262e34";
+    --mainColor2: "#45b5ff";
+    --mainTextColor: "#000";
+  }
+  @font-face {
+    font-family: iranYekan;
+    src: url("../assets/fonts/iranyekan-regular.woff2") format("woff2"),
+      url("../assets/fonts/iranyekan-regular.woff2") format("woff2");
+  }
 
-    @font-face {
-        font-family: vazir;
-        src: url('../assets/fonts/VAZIR\ REGULAR.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF') format('truetype');
-    }
+  @font-face {
+    font-family: vazir;
+    src: url("../assets/fonts/VAZIR\ REGULAR.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF") format("truetype");
+  }
 
-    @font-face {
-        font-family: iransans;
-        src: url('../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-LIGHT\ EDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-MEDIUM_EDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS\ EDITORTEAM.TTF') format('truetype'),
-    }
+  @font-face {
+    font-family: iransans;
+    src: url("../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-LIGHT\ EDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-MEDIUM_EDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS\ EDITORTEAM.TTF") format("truetype");
+  }
 
-    html {
-        scroll-behavior: smooth;
-        user-select: none;
-    }
+  html {
+    scroll-behavior: smooth;
+    user-select: none;
+  }
 
-    body {
-        font-family: iranYekan, vazir, iransans;
-        @apply sm:text-[15px] text-sm
-    }
+  body {
+    font-family: iranYekan, vazir, iransans;
+    @apply sm:text-[15px] text-sm;
+  }
 
-    .button {
-        @apply bg-[#32b85e] mx-auto text-[white] px-8 py-2 rounded;
-    }
-    .inputStyle{
-        @apply outline-none w-full px-2 py-4 text-[#000]
-    }
-    .slowMotionAnimateClose{
-        @apply transition-all duration-500 max-h-[48px] opacity-100 overflow-hidden
-    }
-    .slowMotionAnimateClose.active{
-        @apply max-h-0 opacity-0 pointer-events-none block
-    }
+  .button {
+    @apply bg-[#32b85e] mx-auto text-[white] px-8 py-2 rounded;
+  }
+  .inputStyle {
+    @apply outline-none w-full px-2 py-4 text-[#000];
+  }
+  .slowMotionAnimateClose {
+    @apply transition-all duration-500 max-h-[48px] opacity-100 overflow-hidden;
+  }
+  .slowMotionAnimateClose.active {
+    @apply max-h-0 opacity-0 pointer-events-none block;
+  }
 
-    .window {
-        @apply opacity-0 pointer-events-none transition-all fixed z-10 left-0 top-0 w-full h-full bg-[rgba(0,_0,_0,_.4)] items-center justify-center flex
-    }
-    .window:not(.active){
-        @apply delay-150
-    }
-    .window >div{
-        @apply transition-all 
-    }
+  .window {
+    @apply opacity-0 pointer-events-none transition-all fixed z-10 left-0 top-0 w-full h-full bg-[rgba(0,_0,_0,_.4)] items-center justify-center flex;
+  }
+  .window:not(.active) {
+    @apply delay-150;
+  }
+  .window > div {
+    @apply transition-all;
+  }
 
-    .window.active {
-        @apply  opacity-100 pointer-events-auto 
-    }
-    .window.active>div {
-        @apply translate-x-0  delay-150
-    }
-    .input{
-        @apply border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]
-    }
+  .window.active {
+    @apply opacity-100 pointer-events-auto;
+  }
+  .window.active > div {
+    @apply translate-x-0  delay-150;
+  }
+  .input {
+    @apply border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px];
+  }
 }

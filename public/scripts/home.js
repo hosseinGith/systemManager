@@ -22,17 +22,17 @@ function formData() {
   });
   return value;
 }
-
 async function submitForm(e) {
   e.preventDefault();
-  loading.classList.remove("opacity-0");
-  loading.classList.remove("pointer-events-none");
+  openCloseLoader("open");
+
   let body = formData();
   if (!body) {
-    loading.classList.add("opacity-0");
-    loading.classList.add("pointer-events-none");
+    openCloseLoader("close");
     return;
   }
+
+  body["member_image_url"] = member_image_url;
   try {
     let res = await (
       await fetch("/submitNewMember", {
@@ -43,25 +43,17 @@ async function submitForm(e) {
         body: JSON.stringify(body),
       })
     ).json();
-    console.log(res);
-    if (res.status)
-      Swal.fire({
-        icon: "success",
-        text: res.message,
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      });
-    else
-      Swal.fire({
-        icon: "error",
-        text: res.message,
-        confirmButtonText: "تایید",
-        customClass: {
-          confirmButton: "button",
-        },
-      });
+    if (res.link) {
+      location = res.link;
+    }
+    Swal.fire({
+      icon: res.status ? "success" : "error",
+      text: res.message,
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
   } catch (e) {
     Swal.fire({
       icon: "error",
@@ -71,16 +63,14 @@ async function submitForm(e) {
         confirmButton: "button",
       },
     });
-    console.log(e);
+    console.error(e);
   }
-
-  loading.classList.add("opacity-0");
-  loading.classList.add("pointer-events-none");
+  openCloseLoader("close");
 }
 
 async function getColumns() {
-  loading.classList.remove("opacity-0");
-  loading.classList.remove("pointer-events-none");
+  openCloseLoader("open");
+
   try {
     let res = await (await fetch("/columns")).json();
     if (res.status) {
@@ -127,10 +117,9 @@ async function getColumns() {
       });
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
-  loading.classList.add("opacity-0");
-  loading.classList.add("pointer-events-none");
+  openCloseLoader("close");
 }
 
 let addUs_birthday = document.querySelector(".birthDayDate");
@@ -141,9 +130,8 @@ jalaliDatepicker.startWatch({
     };
   },
 });
-function changeeducationalBase() {
-  $(".reshteUserInfo").addClass("hidden");
-  $(".reshteUserInfoText").addClass("hidden");
-  if ($(".educationalBase").val() === "")
-    $(".reshteUserInfoText").addClass("hidden");
-}
+
+$("#goToUserEdit").change(() => {
+  if ($("#goToUserEdit")[0].checked) $("#goToUserEdit").val("true");
+  else $("#goToUserEdit").val("false");
+});

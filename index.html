@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>جدول نمرات با مرتب‌سازی تاریخ</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+      thead {
+        background-color: gray;
+        color: white;
+      }
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+      tbody tr:nth-child(even) {
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const data = [
+        {
+          lesson: "ریاضی",
+          scores: {
+            "1403/8/2": 14,
+            "1403/8/1": 51,
+            "1403/8/4": 12,
+          },
+        },
+        { lesson: "علوم", scores: { "1403/8/2": 19, "1403/8/1": 18 } },
+        { lesson: "ادبیات", scores: { "1403/8/1": 20, "1403/8/2": 17 } },
+        { lesson: "زبان", scores: { "1403/8/2": 10, "1403/8/1": 15 } },
+      ];
+
+      let allDates = new Set();
+      data.forEach((item) => {
+        Object.keys(item.scores).forEach((date) => allDates.add(date));
+      });
+
+      const sortedDates = Array.from(allDates).sort((a, b) => {
+        const toNumber = (d) => parseInt(d.replace(/\//g, ""));
+        return toNumber(a) - toNumber(b);
+      });
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      const lessonHeader = document.createElement("th");
+      lessonHeader.textContent = "درس";
+      headerRow.appendChild(lessonHeader);
+
+      sortedDates.forEach((date) => {
+        const th = document.createElement("th");
+        th.textContent = date;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+      const tbody = document.createElement("tbody");
+      data.forEach((item) => {
+        const row = document.createElement("tr");
+
+        const lessonCell = document.createElement("td");
+        lessonCell.textContent = item.lesson;
+        row.appendChild(lessonCell);
+
+        sortedDates.forEach((date) => {
+          const scoreCell = document.createElement("td");
+          scoreCell.textContent = item.scores[date] ?? "-";
+          row.appendChild(scoreCell);
+        });
+
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      console.log(table.innerHTML);
+      
+      document.body.appendChild(table);
+    </script>
+  </body>
+</html>

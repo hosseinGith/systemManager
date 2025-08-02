@@ -18,6 +18,8 @@ import signin from "./components/routes/signin.mjs";
 import submitNewMember from "./components/routes/submitNewMember.mjs";
 import deleteFun from "./components/routes/delete.mjs";
 import getAllScoresMember from "./components/routes/getAllScoresMember.mjs";
+import upload from "./components/routes/upload.mjs";
+import getFile from "./components/routes/getFile.mjs";
 const app = express();
 const server = http.createServer(app);
 
@@ -54,10 +56,13 @@ app.post("*/getMemebrsData/chart", async (req, res) =>
 app.post("*/addUserBookScore/:id", async (req, res) =>
   addUserBookScore(req, res)
 );
+
+app.post("*/upload", async (req, res) => upload(req, res));
 app.post("*/getScores/:id", async (req, res) => getScores(req, res));
 app.post("*/getAllScoresMember/:id", async (req, res) =>
   getAllScoresMember(req, res)
 );
+app.get("*/getFile/:fileName", async (req, res) => getFile(req, res));
 
 app.get("*/login", (req, res) => login(req, res));
 
@@ -75,5 +80,5 @@ app.get("*/report", async (req, res, next) => report(req, res, next));
 app.get("*/getUpdate", async (req, res, next) => getUpdate(req, res, next));
 app.get("*", async (req, res, next) => any_path(req, res, next));
 
-const PORT = 3000;
+const PORT = 3001;
 server.listen(PORT);

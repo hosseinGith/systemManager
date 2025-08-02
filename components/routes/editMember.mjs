@@ -1,5 +1,12 @@
 import moment from "moment-jalaali";
-import { encryptMessage, errorHand, isValidJalaliDate, modifyUser, set_data_in_database, verifyToken } from "../core/utils.mjs";
+import {
+  encryptMessage,
+  errorHand,
+  isValidJalaliDate,
+  modifyUser,
+  set_data_in_database,
+  verifyToken,
+} from "../core/utils.mjs";
 
 const editMember = async (req, res) => {
   const memberId = req.params.id;
@@ -20,6 +27,8 @@ const editMember = async (req, res) => {
         res.cookie("users", "");
         user_res = "";
       }
+    console.log(req.body);
+
     let member_res = await (
       await set_data_in_database(
         `SELECT COUNT(*) as count FROM members WHERE id=?`,
@@ -53,7 +62,14 @@ const editMember = async (req, res) => {
             columns.push(`${item} = ?`);
             values.push(value);
             if (item === "dateSchoolSift")
-              if (moment(req.body[item], "jYYYY/jMM/jDD").weekday() === 5) {
+              if (
+                moment(
+                  req.body[item],
+                  "jYYYY/jMM/jDD",
+                  "fa",
+                  true
+                ).weekday() === 5
+              ) {
                 isAllow = {
                   status: false,
                   message:

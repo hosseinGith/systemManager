@@ -17,12 +17,17 @@ const submitNewMember = async (req, res) => {
     }
     if (!req.cookies["user"]) return;
     let user = JSON.parse(req.cookies["user"]);
-    let isEmpty = false;
-    for (const key in req.body) {
-      req.body[key] = String(req.body[key]).trim();
-      if (!req.body[key] && req.body[key] != 0) isEmpty = true;
-    }
-    if (isEmpty || !Number(req.body.number)) {
+
+    let goToUserEdit = req.body.goToUserEdit;
+    delete req.body.goToUserEdit;
+    
+    if (
+      Number.isNaN(Number(req.body.nationalId)) ||
+      !req.body.firstName ||
+      !req.body.lastName ||
+      !req.body.birthDayDate ||
+      !req.body.nationalId
+    ) {
       return res.status(400).json({ message: "همه ی فیلد ها را پر کنید" });
     }
 
@@ -32,7 +37,6 @@ const submitNewMember = async (req, res) => {
         user.username
       )
     )[0];
-
     if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
       res.cookie("user", "");
       res.status(406).json({
@@ -49,7 +53,7 @@ const submitNewMember = async (req, res) => {
       if (checkExist[0].count > 0) {
         res
           .status(404)
-          .json({ message: `عضو در سیستم وجود دارد.`, status: false });
+          .json({ message: `عضو در سیستم ثبت شده است.`, status: false });
         return;
       }
       let keyOfObject = ["editedBy"];
@@ -111,10 +115,26 @@ const submitNewMember = async (req, res) => {
         res.status(404).json({ message: `مشکل در سیستم.`, status: false });
         return;
       }
-      res.status(200).json({
-        message: "عضو در سیستم ثبت شد.",
-        status: true,
-      });
+
+      const memberId = await (
+        await set_data_in_database(
+          `SELECT id FROM members WHERE nationalId=?`,
+          [encryptMessage(req.body.nationalId)]
+        )
+      )[0];
+
+      if (goToUserEdit === "true") {
+        res.status(200).json({
+          link: `/member/${memberId?.id}`,
+          message: "عضو در سیستم ثبت شد.",
+          status: true,
+        });
+      } else {
+        res.status(200).json({
+          message: "عضو در سیستم ثبت شد.",
+          status: true,
+        });
+      }
     } else res.status(404).json({ message: `کاربر یافت نشد.`, status: false });
   } catch (e) {
     errorHand(e);

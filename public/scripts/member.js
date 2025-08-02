@@ -3,6 +3,7 @@ const loading = document.querySelector(".loading");
 const allFormInputs = form.querySelectorAll(
   "input:not([type='hidden']),select:not([type='hidden']),textarea:not([type='hidden'])"
 );
+let server_image_url = "";
 Chart.register(ChartZoom);
 
 const match = window.location.pathname.match(/\/member\/(\d+)/);
@@ -10,6 +11,7 @@ const userId = match ? Number(match[1]) : null;
 let scoreChart;
 let columns;
 let memebr;
+
 (async () => {
   columns = await (await fetch("/columns")).json();
   columns = columns.columns;
@@ -25,7 +27,7 @@ let memebr;
       body: JSON.stringify({ id: userId }),
     })
   ).json();
-  console.log(memebr);
+
   Object.keys(memebr)?.forEach((key) => {
     if (document.querySelector(`[name="${key}"]`))
       document.querySelector(`[name="${key}"]`).value = memebr[key];
@@ -45,8 +47,14 @@ let memebr;
     "کاربر: " + memebr.firstName + " " + memebr.lastName;
 
   $(".educationalBaseAddScore").val(memebr.educationalBase);
-  userEducationalBaseChangeHand(`addScoreForm`);
-  userEducationalBaseChangeHand(`showChartForm`);
+  await userEducationalBaseChangeHand(`addScoreForm`);
+  await userEducationalBaseChangeHand(`showChartForm`);
+  if (!memebr.member_image_url) return;
+  $("#uploadPersonContainer").addClass("hidden");
+  $("#uploadedUserImage").removeClass("hidden");
+  server_image_url = memebr.member_image_url;
+  member_image_url = server_image_url;
+  $("#uploadedUserImage")[0].src = memebr.member_image_url;
 })();
 function input(target) {
   if (target) {
@@ -55,6 +63,7 @@ function input(target) {
     } else target.style.borderColor = "";
   }
 }
+
 Array.from(allFormInputs).forEach((element) => {
   if (!element.options)
     element.addEventListener("input", function () {
@@ -101,7 +110,11 @@ async function submitForm(e) {
     loading.classList.add("pointer-events-none");
     return;
   }
-  if (Object.values(body).length === 0) {
+
+  if (
+    Object.values(body).length === 0 &&
+    member_image_url === server_image_url
+  ) {
     Swal.fire({
       icon: "error",
       text: "فیلد های کاربر ویرایش نشده است.",
@@ -112,6 +125,8 @@ async function submitForm(e) {
     });
   } else
     try {
+      body["member_image_url"] = member_image_url;
+      server_image_url = member_image_url;
       let res = await (
         await fetch("/edit-member/" + userId, {
           method: "POST",
@@ -121,7 +136,7 @@ async function submitForm(e) {
           body: JSON.stringify(body),
         })
       ).json();
-      console.log(res);
+
       if (res.status) {
         Array.from(allFormInputs).forEach((element) => {
           element.style.borderColor = "";
@@ -134,6 +149,9 @@ async function submitForm(e) {
             confirmButton: "button",
           },
         });
+        $(
+          "#uploadedUserImage"
+        )[0].parentElement.parentElement.style.borderColor = "black";
         document.querySelector("#titleOfthePage").textContent =
           "کاربر: " +
           document.querySelector('[name="firstName"]').value +
@@ -172,7 +190,7 @@ async function submitForm(e) {
           confirmButton: "button",
         },
       });
-      console.log(e);
+      console.error(e);
     }
 
   loading.classList.add("opacity-0");
@@ -217,7 +235,6 @@ function generateWeeks(dateInput, isMorning = true) {
     .clone()
     .startOf("week")
     .format("jYYYY-jMM-jDD");
-  console.log(dateInput);
   let startDate = moment(dateInput, "jYYYY-jMM-jDD"); // ۱ مهر همان سال
   let endDate = moment(`${year + 1}-04-01`, "jYYYY-jMM-jDD")
     .clone()
@@ -279,7 +296,6 @@ function searchInShiftDate(date) {
     return Array.from(dateShift).forEach((item) => {
       item.parentElement.classList.remove("active");
     });
-  console.log(date);
   Array.from(dateShift).forEach((item) => {
     item.parentElement.classList.add("active");
   });
@@ -290,7 +306,7 @@ function searchInShiftDate(date) {
   });
 }
 
-function userEducationalBaseChangeHand(parentId) {
+async function userEducationalBaseChangeHand(parentId) {
   $(`#${parentId} .scoreInput`).val("");
 
   $(`#${parentId} .bookName`).empty("");
@@ -313,6 +329,10 @@ function userEducationalBaseChangeHand(parentId) {
   }
   $(`#${parentId} .bookSelectParent`).removeClass("hidden");
   $(`#${parentId} .textBookParent`).addClass("hidden");
+  try {
+    booksArray = await (await fetch("/books.json")).json();
+  } catch (e) {}
+
   switch (true) {
     case index <= 9:
       booksArray[$(`#${parentId} .educationalBaseAddScore`).val()]?.forEach(
@@ -420,6 +440,7 @@ async function showChart() {
       })
     ).json();
     if (scoreChart) scoreChart.destroy();
+
     if (res.status) {
       $("#canvasCont").removeClass("h-0");
       $("#pcsResult").text(res.values.score.length);
@@ -484,7 +505,7 @@ async function showChart() {
         },
       });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     Swal.fire({
       icon: "error",
@@ -528,7 +549,6 @@ function transformData(allData) {
 
 function showAllScoreMember(res) {
   let { allData, allBooks } = res.values;
-  console.log(allData);
 
   if (Object.keys(allData).length === 0)
     return Swal.fire({
@@ -542,29 +562,55 @@ function showAllScoreMember(res) {
   allBooks.forEach((item) => {
     if (!allData[item]) allData[item] = [{ date: "" }];
   });
-  let row = Object.keys(allData);
-  let transformedData = transformData(allData);
 
-  let th = "";
-  let trs = "";
-  row.forEach((key) => {
-    th += `<th>${key}</th>`;
+  let allDates = new Set();
+  allData.forEach((item) => {
+    Object.keys(item.scores).forEach((date) => {
+      allDates.add(date);
+    });
   });
 
-  for (let index = 0; index < transformedData.length; index++) {
-    if (transformedData[index].date) {
-      let tr = `<tr>
-    <td>${transformedData[index].date}</td>
-    `;
-      for (const bookName in transformedData[index]) {
-        if (bookName !== "date")
-          tr += `<td>${transformedData[index][bookName] || "--"}</td>`;
-      }
-      tr += `</tr>`;
+  const sortedDates = Array.from(allDates).sort((a, b) => {
+    const toNumber = (d) => parseInt(d.replace(/\//g, ""));
+    return toNumber(a) - toNumber(b);
+  });
 
-      trs += tr;
-    }
-  }
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  const lessonHeader = document.createElement("th");
+  lessonHeader.textContent = "درس";
+  headerRow.appendChild(lessonHeader);
+
+  sortedDates.forEach((date) => {
+    const th = document.createElement("th");
+    th.textContent = date;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  allData.forEach((item) => {
+    const row = document.createElement("tr");
+
+    const lessonCell = document.createElement("td");
+
+    lessonCell.textContent = item.lesson;
+    row.appendChild(lessonCell);
+
+    sortedDates.forEach((date) => {
+      const scoreCell = document.createElement("td");
+      scoreCell.textContent = item.scores[date] ?? "-";
+      row.appendChild(scoreCell);
+    });
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  console.log(table.innerHTML);
 
   const winHtml = `
   <!DOCTYPE html>
@@ -614,52 +660,34 @@ function showAllScoreMember(res) {
   <body>
     <div style="margin: auto">
       <table>
-        <thead>
-          <tr>
-            <th>نام</th>
-            <th>نام خانوادگی</th>
-            <th>کلاس</th>
-            <th>تاریخ شروع</th>
-            <th>تا تاریخ</th>
-            <th>سال تحصیلی</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>${res.values.firstName}</td>
-            <td>${res.values.lastName}</td>
-            <td>${res.values.educationalBase}</td>
-            <td>${$(".dateFrom").val()}</td>
-            <td>${$(".dateTo").val()}</td>
-            <td dir="ltr">${res.values.educationalDate}</td>
-          </tr>
-        </tbody>
+      ${table.innerHTML}
       </table>
-           <table class="table2">
-    <thead>
-      <tr>
-        <th>تاریخ / درس</th>
-        ${th}
-      </tr>
-    </thead>
-    <tbody>
-    ${trs}
-    </tbody>
-  </table>
     </div>
  ${
    scoreChart
-     ? `   <div style="width:100%;">
+     ? ` 
+     <div style="width:100%;">
       <a src="${scoreChart?.toBase64Image("image/png")}" download="${
          res.values.firstName + " " + res.values.lastName
        }.png">
-       <img style="width:100%;aspect-ratio: 16 / 9;object-fit:contain" src="${scoreChart?.toBase64Image(
-         "image/png"
-       )}" />
-      </a> 
-    </div>`
+        <img onload="loadImage()" onerror="errorImage(this)" style="width:100%;aspect-ratio: 16 / 9;object-fit:contain" src="${scoreChart?.toBase64Image(
+          "image/png"
+        )}" />
+       </a> 
+     </div>
+     `
      : ""
  }
+ <script>
+ 
+  function loadImage() {
+    newWind.print();
+  }
+  function errorImage(img) {
+    img.remove();
+    newWind.print();
+  }
+ </script>
   </body>
 </html>
 `;
@@ -667,12 +695,180 @@ function showAllScoreMember(res) {
 
   newWind.document.write(winHtml);
   if (!scoreChart) newWind.print();
-  newWind.document.querySelector("img").onload = () => {
-    newWind.print();
-  };
-  newWind.document.querySelector("img").onerror = () => {
-    newWind.print();
-  };
+
+  newWind.document.close();
+}
+function showScoreAOwnYear(res) {
+  let { scores } = res;
+
+  if (Object.keys(scores).length === 0)
+    return Swal.fire({
+      icon: "info",
+      text: "این کاربر نمره ای برای پایه انتخاب شده ندارد.",
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
+  let trs = "<tr>";
+  let books = "";
+  if (
+    Object.keys(booksArray).indexOf($(".educationalBaseAddScore")[1].value) +
+      1 >
+    9
+  ) {
+    books =
+      booksArray[$(".educationalBaseAddScore")[1].value][
+        $(".reshteSelect")[1].value
+      ];
+  } else {
+    books = booksArray[$(".educationalBaseAddScore")[1].value];
+  }
+  let bookNotFound = books.filter((item) => {
+    if (!Object.keys(scores)?.find((it) => item === it)) return item;
+  });
+  let newBooks = {};
+  bookNotFound.forEach((item) => {
+    newBooks[item] = {
+      mostamar: null,
+      middleOwn: null,
+      middleTow: null,
+      mostamarClass: null,
+    };
+  });
+  const newScores = { ...scores, ...newBooks };
+
+  Object.keys(newScores).forEach((item, index) => {
+    trs += `
+          <tr>
+            <td>${index}</td>
+            <td>${item}</td>
+            <td>${
+              newScores[item].mostamar ? newScores[item].mostamar : "---"
+            }</td>
+            <td>${
+              newScores[item].middleOwn ? newScores[item].middleOwn : "---"
+            }</td>
+            <td>${
+              newScores[item].middleTow ? newScores[item].middleTow : "---"
+            }</td>
+            <td>---</td>
+          </tr>
+    `;
+  });
+  trs += "</tr>";
+  const winHtml = `
+ <!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>${
+      $("[name=firstName]").val() + " " + $("[name=lastName]").val()
+    }</title>
+    <style>
+      body {
+    font-family: sans-serif;
+        background: #f2f2f2;
+        padding: 20px;
+      }
+
+      .report-card {
+        width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 30px;
+        border: 2px solid #333;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .student-info {
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+
+      .student-info span {
+        display: inline-block;
+        width: 200px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #000;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .summary {
+        font-size: 16px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="report-card">
+      <div class="header">
+        <h1>کارنامه تحصیلی</h1>
+        <p>سال تحصیلی: ۱۴۰۴-۱۴۰۳</p>
+      </div>
+
+      <div class="student-info">
+        <p><span>نام:</span> ${$("[name=firstName]").val()}</p>
+        <p><span>پایه:</span> ${$("[name=lastName]").val()}</p>
+        ${res.reshte ? `<p><span>رشته:</span> ${res.reshte}</p>` : ""}
+        <p><span>کد ملی:</span> ${$("[name=nationalId]").val()}</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ردیف</th>
+            <th>نام درس</th>
+            <th>نمره مستمر</th>
+            <th>نمره پایانی</th>
+            <th>نمره کل</th>
+            <th>وضعیت</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${trs}
+        </tbody>
+      </table>
+
+      <div class="summary">
+        <p><strong>معدل کل:</strong>---</p>
+        <p><strong>نتیجه:</strong> ---</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+`;
+  let newWind = window.open("", "_blank");
+
+  newWind.document.write(winHtml);
+  if (!scoreChart) newWind.print();
+
   newWind.document.close();
 }
 
@@ -713,6 +909,7 @@ $("#printButton").click(async () => {
     if (res.status) {
       if ($("#printType").val() === "all") showAllScoreMember(res);
       else {
+        showScoreAOwnYear(res);
       }
     } else
       Swal.fire({
@@ -724,7 +921,7 @@ $("#printButton").click(async () => {
         },
       });
   } catch (e) {
-    console.log(e);
+    console.error(e);
 
     Swal.fire({
       icon: "error",

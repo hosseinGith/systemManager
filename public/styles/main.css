@@ -458,24 +458,24 @@ video {
 @font-face {
   font-family: iranYekan;
 
-  src: url('../assets/fonts/iranyekan-regular.woff2') format('woff2'),
-            url('../assets/fonts/iranyekan-regular.woff2') format('woff2');
+  src: url("../assets/fonts/iranyekan-regular.woff2") format("woff2"),
+      url("../assets/fonts/iranyekan-regular.woff2") format("woff2");
 }
 
 @font-face {
   font-family: vazir;
 
-  src: url('../assets/fonts/VAZIR\ REGULAR.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF') format('truetype');
+  src: url("../assets/fonts/VAZIR\ REGULAR.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF") format("truetype");
 }
 
 @font-face {
   font-family: iransans;
 
-  src: url('../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-LIGHT\ EDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS-MEDIUM_EDITORTEAM.TTF') format('truetype'),
-            url('../assets/fonts/IRANSANS\ EDITORTEAM.TTF') format('truetype'),
+  src: url("../assets/fonts/IRANSANS-BOLDEDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-LIGHT\ EDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS-MEDIUM_EDITORTEAM.TTF") format("truetype"),
+      url("../assets/fonts/IRANSANS\ EDITORTEAM.TTF") format("truetype");
 }
 
 html {
@@ -488,7 +488,7 @@ html {
 body {
   font-family: iranYekan, vazir, iransans;
   font-size: 0.875rem;
-  line-height: 1.25rem
+  line-height: 1.25rem;
 }
 
 @media (min-width: 640px) {
@@ -561,7 +561,7 @@ body {
   transition-delay: 150ms;
 }
 
-.window >div {
+.window > div {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
@@ -572,7 +572,7 @@ body {
   opacity: 1;
 }
 
-.window.active>div {
+.window.active > div {
   --tw-translate-x: 0px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   transition-delay: 150ms;
@@ -857,6 +857,15 @@ body {
   display: none;
 }
 
+.aspect-\[3_\/_4\] {
+  aspect-ratio: 3 / 4;
+}
+
+.size-6 {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .size-9 {
   width: 2.25rem;
   height: 2.25rem;
@@ -882,6 +891,10 @@ body {
   height: 70vh;
 }
 
+.h-\[800px\] {
+  height: 800px;
+}
+
 .h-auto {
   height: auto;
 }
@@ -897,6 +910,10 @@ body {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-\[400px\] {
+  height: 400px;
 }
 
 .max-h-0 {
@@ -959,6 +976,10 @@ body {
 
 .max-w-\[450px\] {
   max-width: 450px;
+}
+
+.max-w-\[500px\] {
+  max-width: 500px;
 }
 
 .max-w-\[700px\] {
@@ -1151,6 +1172,14 @@ body {
   border-bottom-width: 2px;
 }
 
+.border-dashed {
+  border-style: dashed;
+}
+
+.border-dotted {
+  border-style: dotted;
+}
+
 .border-\[\#bbb\] {
   --tw-border-opacity: 1;
   border-color: rgb(187 187 187 / var(--tw-border-opacity));
@@ -1163,6 +1192,11 @@ body {
 
 .border-\[transparent\] {
   border-color: transparent;
+}
+
+.border-black {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
 .border-gray-500 {
@@ -1178,6 +1212,11 @@ body {
 .border-lowIconColor {
   --tw-border-opacity: 1;
   border-color: rgb(140 147 158 / var(--tw-border-opacity));
+}
+
+.border-red-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
 }
 
 .border-t-\[\#17bdff\] {
@@ -1250,6 +1289,11 @@ body {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .p-1 {
@@ -1488,6 +1532,11 @@ body {
 
   .sm\:text-\[16px\] {
     font-size: 16px;
+  }
+
+  .sm\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 }
 

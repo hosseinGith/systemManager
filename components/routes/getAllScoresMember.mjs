@@ -51,52 +51,76 @@ const getAllScoresMember = async (req, res) => {
         status: false,
         message: "کاربر مورد نظر در سیستم وجود ندارد.",
       });
+
     member_res.firstName = decryptMessage(member_res.firstName);
     member_res.lastName = decryptMessage(member_res.lastName);
     member_res.educationalBase = decryptMessage(member_res.educationalBase);
     member_res.nationalId = decryptMessage(member_res.nationalId);
+    member_res.reshte = decryptMessage(member_res.reshte);
 
-    let values_res = await set_data_in_database(
-      `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? `,
-      [member_res.nationalId, data.educationalBaseAddScore]
-    );
     let reshteBooks = books[member_res.educationalBase];
-    if (data.reshteSelect) reshteBooks = reshteBooks[data.reshteSelect];
-    if (!values_res)
-      return res.status(404).json({
-        status: false,
-        message: "مشکل در سیستم.",
-      });
+
+    if (
+      data.reshteSelect &&
+      Object.keys(books).findIndex((it) => it === member_res.educationalBase) >=
+        10
+    )
+      reshteBooks = reshteBooks[data.reshteSelect];
+
+    const type = "jYYYY/jMM/jDD";
     if (data.type === "all") {
+      let values_res = await set_data_in_database(
+        `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? `,
+        [member_res.nationalId]
+      );
+      if (!values_res)
+        return res.status(404).json({
+          status: false,
+          message: "مشکل در سیستم.",
+        });
+
       let values = {
-        allData: {},
+        allData: [],
         allBooks: values_res.length > 0 ? reshteBooks : [],
         firstName: member_res.firstName,
         lastName: member_res.lastName,
         educationalBase: member_res.educationalBase,
         educationalDate:
-          Number(Number(moment(data.dateFrom).get("year")) + 1) +
+          Number(Number(moment(data.dateFrom, type, "fa", true).jYear()) + 1) +
           "-" +
-          moment(data.dateFrom).get("year"),
+          moment(data.dateFrom, type, "fa", true).jYear(),
       };
-      const type = "jYYYY/jMM/jDD";
+
       values_res.forEach((item) => {
+        const from = moment(data.dateFrom, type, "fa", true);
+        const to = moment(data.dateTo, type, "fa", true);
+        const itemDate = moment(item.date, type, "fa", true);
         if (
-          moment(item.date, type).diff(moment(data.dateFrom, type), "days") >=
-            0 &&
-          moment(data.dateTo, type).diff(moment(item.date, type), "days") >=
-            0 &&
+          itemDate.isSameOrAfter(from) &&
+          itemDate.isSameOrBefore(to) &&
           Object.keys(books).findIndex((it) => it === item.educationalBase) >=
             Object.keys(books).findIndex(
               (it) => it === data.educationalBaseAddScore
             )
         ) {
-          if (!values.allData[item.bookName])
-            values.allData[item.bookName] = [];
-          values.allData[item.bookName].push({
-            date: item.date,
-            score: item.score,
+          if (
+            !values.allData.find(
+              (bookdata) => bookdata.lesson === item.bookName
+            )
+          )
+            values.allData.push({
+              lesson: item.bookName,
+              scores: {},
+            });
+
+          let index;
+          values.allData.find((bookdata, ind) => {
+            if (bookdata.lesson === item.bookName) {
+              index = ind;
+              return;
+            }
           });
+          values.allData[index].scores[item.date] = item.score;
         }
       });
 
@@ -105,11 +129,25 @@ const getAllScoresMember = async (req, res) => {
         values,
       });
       values = null;
+      values_res = null;
     } else if (data.type === "schoole") {
+      let values_res = await set_data_in_database(
+        `SELECT * FROM educationalbasescores WHERE memberNationalId=BINARY ? AND educationalBase=BINARY ?`,
+        [member_res.nationalId, data.educationalBaseAddScore]
+      );
+      if (!values_res)
+        return res.status(404).json({
+          status: false,
+          message: "مشکل در سیستم.",
+        });
       let scores = {};
-      values_res.forEach((item, index) => {
-        scores = samAObject(scores, item);
-      });
+
+      for (let index = 0; index < values_res.length; index++) {
+        const item = values_res[index];
+
+        if (item.educationalBase === data.educationalBaseAddScore)
+          scores = samAObject(scores, item);
+      }
 
       Object.keys(scores).forEach((item) => {
         scores[item].mostamarClass =
@@ -128,12 +166,12 @@ const getAllScoresMember = async (req, res) => {
       res.status(200).json({
         status: true,
         scores,
+        reshte: member_res.reshte,
       });
       // middleTowTotal;
       // mostamar;
+      values_res = null;
     }
-
-    values_res = null;
   } catch (err) {
     errorHand(err);
 

@@ -1,5 +1,12 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
-import { bcrypt, globalKeys, hostDatabase, jwt, moment, mysql } from "./settings.mjs";
+import {
+  bcrypt,
+  globalKeys,
+  hostDatabase,
+  jwt,
+  moment,
+  mysql,
+} from "./settings.mjs";
 
 const hashPassword = async (password) => {
   try {
@@ -15,7 +22,7 @@ const isValidJalaliDate = (dateString) => {
   const regex = /^\d{4}\/\d{2}\/\d{2}$/;
   if (!regex.test(dateString)) return false;
 
-  const date = moment(dateString, "jYYYY/jMM/jDD", true);
+  const date = moment(dateString, "jYYYY/jMM/jDD", "fa", true);
   if (!date.isValid()) return false;
 
   const [year, month, day] = dateString.split("/").map(Number);
@@ -29,7 +36,6 @@ const isValidJalaliDate = (dateString) => {
 };
 
 async function backupDatabaseToSQL({ database, outputFile }) {
-  console.log(1);
   const tables = await set_data_in_database("SHOW TABLES");
   const tableNames = tables.map((row) => Object.values(row)[0]);
 

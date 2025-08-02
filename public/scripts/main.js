@@ -1,237 +1,8 @@
 const sectionTitle = document.querySelectorAll(".sectionTitle");
 const menu = document.querySelector("#menu");
 const showMenu = document.querySelector("#showMenu");
-const booksArray = {
-  اول: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "قرآن",
-    "هدیه‌های آسمان",
-    "کتاب نگارش فارسی",
-    "آموزش قرآن",
-  ],
-
-  دوم: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "قرآن",
-    "هدیه‌های آسمان",
-    "کتاب نگارش فارسی",
-    "آموزش قرآن",
-  ],
-
-  سوم: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "قرآن",
-    "هدیه‌های آسمان",
-    "کتاب نگارش فارسی",
-    "آموزش قرآن",
-  ],
-
-  چهارم: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "نگارش فارسی",
-    "آموزش قرآن",
-  ],
-
-  پنجم: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "نگارش فارسی",
-    "آموزش قرآن",
-  ],
-  ششم: [
-    "فارسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "نگارش فارسی",
-    "آموزش قرآن",
-    "کار و فناوری",
-    "تفکر و پژوهش",
-  ],
-  هفتم: [
-    "فارسی",
-    "نگارش",
-    "عربی",
-    "انگلیسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "تفکر و سبک زندگی",
-    "کار و فناوری",
-    "فرهنگ و هنر",
-  ],
-  هشتم: [
-    "فارسی",
-    "نگارش",
-    "عربی",
-    "انگلیسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "تفکر و سبک زندگی",
-    "کار و فناوری",
-    "فرهنگ و هنر",
-  ],
-  نهم: [
-    "فارسی",
-    "نگارش",
-    "عربی",
-    "انگلیسی",
-    "ریاضی",
-    "علوم تجربی",
-    "مطالعات اجتماعی",
-    "هدیه‌های آسمان",
-    "قرآن",
-    "کار و فناوری",
-    "فرهنگ و هنر",
-  ],
-  دهم: {
-    "ریاضی فیزیک": [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 1",
-      "فیزیک 1",
-      "شیمی 1",
-      "هندسه 1",
-      "علوم و فنون ادبی 1",
-      "تفکر و سواد رسانه‌ای",
-      "آمادگی دفاعی",
-    ],
-    تجربی: [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 1",
-      "فیزیک 1",
-      "شیمی 1",
-      "زیست‌شناسی 1",
-      "علوم و فنون ادبی 1",
-      "تفکر و سواد رسانه‌ای",
-      "آمادگی دفاعی",
-    ],
-    انسانی: [
-      "فارسی",
-      "نگارش",
-      "عربی تخصصی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "منطق",
-      "ریاضی و آمار 1",
-      "اقتصاد",
-      "تاریخ 1",
-      "جغرافیا 1",
-      "علوم و فنون ادبی 1",
-      "آمادگی دفاعی",
-    ],
-  },
-  یازدهم: {
-    "ریاضی فیزیک": [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 2",
-      "فیزیک 2",
-      "شیمی 2",
-      "هندسه 2",
-      "آمار و احتمال",
-      "علوم و فنون ادبی 2",
-    ],
-    تجربی: [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 2",
-      "فیزیک 2",
-      "شیمی 2",
-      "زیست‌شناسی 2",
-      "علوم و فنون ادبی 2",
-    ],
-    انسانی: [
-      "فارسی",
-      "نگارش",
-      "عربی تخصصی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی و آمار 2",
-      "جامعه‌شناسی 1",
-      "تاریخ 2",
-      "جغرافیا 2",
-      "فلسفه",
-      "علوم و فنون ادبی 2",
-    ],
-  },
-  دوازدهم: {
-    "ریاضی فیزیک": [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 3",
-      "فیزیک 3",
-      "شیمی 3",
-      "هندسه 3",
-      "گسسته",
-      "علوم و فنون ادبی 3",
-    ],
-    تجربی: [
-      "فارسی",
-      "نگارش",
-      "عربی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی 3",
-      "فیزیک 3",
-      "شیمی 3",
-      "زیست‌شناسی 3",
-      "علوم و فنون ادبی 3",
-    ],
-    انسانی: [
-      "فارسی",
-      "نگارش",
-      "عربی تخصصی",
-      "زبان انگلیسی",
-      "دین و زندگی",
-      "ریاضی و آمار 3",
-      "جامعه‌شناسی 2",
-      "تاریخ 3",
-      "جغرافیا 3",
-      "فلسفه 2",
-      "علوم و فنون ادبی 3",
-    ],
-  },
-};
-
+let booksArray = [];
+let member_image_url;
 async function deleteUser(id) {
   loading.classList.remove("opacity-0");
   loading.classList.remove("pointer-events-none");
@@ -275,7 +46,7 @@ async function deleteUser(id) {
         confirmButton: "button",
       },
     });
-    console.log(e);
+    console.error(e);
   }
   loading.classList.add("opacity-0");
   loading.classList.add("pointer-events-none");
@@ -286,6 +57,41 @@ function showOther(element, condition) {
   } else {
     element.type = "hidden";
   }
+}
+async function compressImage(file, quality = 0.7) {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(
+          (blob) => {
+            let newFile = new File([blob], file.name, {
+              type: "image/jpeg",
+            });
+            resolve(newFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+
+      img.onerror = (err) => reject(err);
+    };
+
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
 }
 
 const isValidJalaliDate = (dateString) => {
@@ -366,3 +172,100 @@ document.querySelectorAll(".window").forEach((item) => {
     if (this === e.target) this.classList.remove("active");
   };
 });
+
+function openCloseLoader(type) {
+  if (!document.querySelector('.loading')) return;
+  switch (type) {
+    case "open":
+      document.querySelector('.loading').classList.remove("opacity-0");
+      document.querySelector('.loading').classList.remove("pointer-events-none");
+      break;
+    case "close":
+      document.querySelector('.loading').classList.add("opacity-0");
+      document.querySelector('.loading').classList.add("pointer-events-none");
+      break;
+  }
+}
+
+$("#userFile").change(async function () {
+  let file = this.files[0];
+
+  if (file.type.split("/")[0] === "image") file = await compressImage(file);
+  else
+    return Swal.fire({
+      icon: "error",
+      text: "فقط عکس مجاز است.",
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
+  openCloseLoader("open");
+
+  try {
+    const res = await fetch("/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/octet-stream",
+        ext: file.type.split("/")[1],
+      },
+      body: file,
+    });
+    const data = await res.json();
+
+    Swal.fire({
+      icon: res.status === 200 ? "success" : "error",
+      text: data.message,
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
+    if (res.status === 200) {
+      $("#uploadPersonContainer").addClass("hidden");
+      $("#uploadedUserImage").removeClass("hidden");
+      $("#uploadedUserImage")[0].src = data.url;
+      member_image_url = data.url;
+      if (otherSuccessUpload) otherSuccessUpload();
+    }
+  } catch (e) {
+    console.error(e);
+    Swal.fire({
+      icon: "error",
+      text: "مشکل در اینترنت.",
+      confirmButtonText: "تایید",
+      customClass: {
+        confirmButton: "button",
+      },
+    });
+  }
+
+  openCloseLoader("close");
+  this.value = "";
+});
+async function changeeducationalBase(select) {
+  $(".reshteParent").addClass("hidden");
+  $(".reshteUserInfo").addClass("hidden");
+  $(".reshteUserInfoText").addClass("hidden");
+  if ($(".educationalBase").val() === "")
+    $(".reshteUserInfoText").addClass("hidden");
+  try {
+    booksArray = await (await fetch("/books.json")).json();
+  } catch (e) {}
+  if (Object.keys(booksArray).indexOf(select.value) + 1 > 9) {
+    $(".reshteUserInfo").removeClass("hidden");
+    $(".reshteUserInfo").attr("required", "");
+    $(".reshteParent").removeClass("hidden");
+    $("[name=reshteUserInfo]").empty();
+    $("[name=reshteUserInfo]").append(
+      $(`<option value="">انتخاب کنید</option>`)
+    );
+    Object.keys(booksArray[select.value]).forEach((item, index) => {
+      $("[name=reshteUserInfo]").append(
+        $(`<option value="${item}">${item}</option>`)
+      );
+    });
+  } else {
+    $(".reshteUserInfo").removeAttr("required");
+  }
+}

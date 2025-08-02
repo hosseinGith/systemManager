@@ -12,8 +12,6 @@ let newStart = 0;
   columns = columns.columns;
 })();
 function submitFormSearch(e, form) {
-  console.log(346);
-
   e.preventDefault();
   membersCont.textContent = "";
   search(searchValue.value.trim());
@@ -77,7 +75,7 @@ async function search(val, start = 0) {
         if (!item["age"].trim()) item["age"] = "تاریخ تولد نا معتبر";
         createLi(item, columns);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
   } catch (e) {
@@ -89,14 +87,17 @@ async function search(val, start = 0) {
         confirmButton: "button",
       },
     });
-    console.log(e);
+    console.error(e);
   }
   loading.classList.add("opacity-0");
   loading.classList.add("pointer-events-none");
 }
+function creatEl(type) {
+  return document.createElement(type);
+}
 function createLi(data, columns) {
   let fragment = document.createDocumentFragment();
-  let li = document.createElement("a");
+  let li = creatEl("a");
   li.href = "/member/" + data.id;
   li.className = "border-8";
   li.style.padding = "10px";
@@ -105,12 +106,20 @@ function createLi(data, columns) {
   li.style.flexDirection = "column";
   li.style.gap = "10px";
 
-  let idDiv = document.createElement("div");
+  let idDiv = creatEl("div");
   idDiv.className = "id";
   idDiv.style.display = "flex";
   idDiv.style.justifyContent = "space-between";
+  idDiv.style.alignItems = "center";
   idDiv.style.width = "100%";
-  idDiv.innerHTML = `id: <span>${data.id}</span>`;
+  idDiv.innerHTML = `
+  id:
+  <div style="display:flex;align-items:center;gap:4px">
+  <span>${data.id}</span>
+  <img style="width:${!data.member_image_url?"0":"80px"};height:80px;aspcet-ratio:3 / 4; object-fit:contain;opacity:${!data.member_image_url?"0":""};" src="${data.member_image_url}" />
+  </div>
+  `;
+
   if (searchValue.value == data.id) {
     idDiv.querySelector("span").style.color = "red";
     idDiv.style.fontWeight = "bold";
@@ -118,13 +127,13 @@ function createLi(data, columns) {
   li.appendChild(idDiv);
 
   const createSection = (title, className) => {
-    let section = document.createElement("div");
+    let section = creatEl("div");
     section.className = className;
     section.style.gap = "5px";
     section.style.border = "2px solid #bbb";
     section.style.width = "100%";
 
-    let header = document.createElement("h1");
+    let header = creatEl("h1");
     header.className = "p-2";
     header.textContent = title;
     header.style.background = "#2f569d";
@@ -133,7 +142,7 @@ function createLi(data, columns) {
     header.style.margin = "0 auto";
     header.style.borderRadius = "0 0 20px 20px";
 
-    let content = document.createElement("div");
+    let content = creatEl("div");
     content.className = "grid grid-cols-1";
 
     section.appendChild(header);
@@ -145,6 +154,8 @@ function createLi(data, columns) {
   let sections = {};
   let newColumns = [];
   Object.keys(data).forEach((key) => {
+    if (key === "member_image_url") return;
+
     let findValue = columns.find((col) => {
       if (typeof col.value === "string") col.value = JSON.parse(col.value);
       if (col.value[1] === key) return col;
@@ -162,19 +173,19 @@ function createLi(data, columns) {
     let targetSection = sections[item.value[2].replaceAll(" ", "")];
     if (targetSection) {
       let contentDiv = targetSection.querySelector("div");
-      let fieldDiv = document.createElement("div");
+      let fieldDiv = creatEl("div");
       fieldDiv.className = `grid grid-cols-1 px-2 gap-4 w-full`;
       fieldDiv.style.textAlign = "start";
 
-      let valueDiv = document.createElement("div");
+      let valueDiv = creatEl("div");
       valueDiv.className = `flex ${item.value[1]} justify-between  p-1`;
 
-      let label = document.createElement("span");
+      let label = creatEl("span");
       label.style.fontWeight = "bold";
 
       label.textContent = `${item.value[0].replaceAll(":", "")}:`;
 
-      let valueSpan = document.createElement("p");
+      let valueSpan = creatEl("p");
       valueSpan.classList.add("sm:text-[17px]");
       valueSpan.classList.add("text-[13px]");
 
@@ -195,7 +206,7 @@ function createLi(data, columns) {
       data[key] = data[key].split(enc);
 
       data[key].forEach((item, index) => {
-        let valueSpan = document.createElement("span");
+        let valueSpan = creatEl("span");
         if (
           String(searchValue.value) == item &&
           (type.value === key || type.value === "all")

@@ -25,7 +25,6 @@ async function submitForm(e) {
         body: JSON.stringify(formData()),
       })
     ).json();
-    console.log(res);
     if (res.status)
       Swal.fire({
         icon: "success",
@@ -53,7 +52,7 @@ async function submitForm(e) {
         confirmButton: "button",
       },
     });
-    console.log(e);
+    console.error(e);
   }
 
   loading.classList.add("opacity-0");

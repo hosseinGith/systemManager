@@ -54,12 +54,21 @@ const getScores = async (req, res) => {
       score: [],
     };
     const type = "jYYYY/jMM/jDD";
-
+    values_res.sort((a, b) => {
+      const dateA = moment(a.date, type, true);
+      const dateB = moment(b.date, type, true);
+      return dateA.toDate().getTime() - dateB.toDate().getTime();
+    });
     values_res.forEach((item) => {
       if (
-        moment(item.date, type).diff(moment(data.dateFrom, type), "days") >=
-          0 &&
-        moment(data.dateTo, type).diff(moment(item.date, type), "days") >= 0 &&
+        moment(item.date, type, "fa", true).diff(
+          moment(data.dateFrom, type, "fa", true),
+          "days"
+        ) >= 0 &&
+        moment(data.dateTo, type, "fa", true).diff(
+          moment(item.date, type, "fa", true),
+          "days"
+        ) >= 0 &&
         Object.keys(books).findIndex((it) => it === item.educationalBase) >=
           Object.keys(books).findIndex(
             (it) => it === data.educationalBaseAddScore
