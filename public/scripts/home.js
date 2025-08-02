@@ -7,7 +7,7 @@ function formData() {
   );
   inputs.forEach((item) => {
     if (item.name === "birthDayDate") {
-      if (!isValidJalaliDate(item.value)) {
+      if (!isValidJalaliDate(item.value) && item.value) {
         Swal.fire({
           icon: "error",
           text: "فرمت تاریخ اشتباه است.",

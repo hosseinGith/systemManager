@@ -20,19 +20,9 @@ const submitNewMember = async (req, res) => {
     if (
       Number.isNaN(Number(req.body.nationalId)) ||
       !req.body.firstName ||
-      !req.body.lastName ||
-      !req.body.birthDayDate ||
-      !req.body.nationalId
+      !req.body.lastName
     ) {
       return res.status(400).json({ message: "همه ی فیلد ها را پر کنید" });
-    }
-
-    if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
-      res.cookie("user", "");
-      res.status(406).json({
-        message: "لطفا دوباره لاگین کنید.",
-      });
-      return;
     }
 
     if (user_res) {
@@ -49,7 +39,10 @@ const submitNewMember = async (req, res) => {
       let keyOfObject = ["editedBy"];
       let isAllow = { status: true, message: "" };
       for (const key in req.body) {
-        if (key === "birthDayDate" || key === "dateSchoolSift") {
+        if (
+          (key === "birthDayDate" && req.body[key]) ||
+          (key === "dateSchoolSift" && req.body[key])
+        ) {
           if (!isValidJalaliDate(req.body[key])) {
             isAllow = {
               status: false,
@@ -66,7 +59,7 @@ const submitNewMember = async (req, res) => {
                   "لطفا تاریخ شیفت را از شنبه تا چهارشنبه یا پنجشنبه انتخاب کنید.",
               };
             }
-        } else {
+        } else if (req.body[key]) {
           keyOfObject.push(key);
         }
       }
