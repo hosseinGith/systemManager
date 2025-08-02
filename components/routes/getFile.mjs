@@ -1,6 +1,7 @@
 import path from "path";
 import { __dirname, cookie, fs } from "../core/settings.mjs";
 import {
+  checkUserAthu,
   decryptMessage,
   errorHand,
   set_data_in_database,
@@ -10,31 +11,12 @@ import sharp from "sharp";
 
 const getFile = async (req, res) => {
   try {
+    let { user_res, cookieUser } = await checkUserAthu(req, res);
+    if (!user_res || !cookieUser) return;
+
     let lowQuality = String(req.params.fileName.split(".")[0]).includes(
       "_lowQuality"
     );
-    const cookies = req.headers.cookie;
-    let client_cookie = {};
-    if (cookies) {
-      client_cookie = cookie.parse(cookies);
-    }
-    if (!req.cookies["user"]) return;
-    let user = JSON.parse(req.cookies["user"]);
-
-    let user_res = await (
-      await set_data_in_database(
-        `SELECT * FROM users WHERE username=?`,
-        user.username
-      )
-    )[0];
-
-    if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
-      res.cookie("user", "");
-      res.status(406).json({
-        message: "لطفا دوباره لاگین کنید.",
-      });
-      return;
-    }
 
     let decoded_url =
       decryptMessage(

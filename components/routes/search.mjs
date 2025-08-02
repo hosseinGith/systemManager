@@ -1,5 +1,6 @@
 import { cookie, moment } from "../core/settings.mjs";
 import {
+  checkUserAthu,
   decryptMessage,
   set_data_in_database,
   verifyToken,
@@ -8,27 +9,8 @@ import {
 const search = async (req, res) => {
   let { textSearch, type } = req.query;
 
-  const cookies = req.headers.cookie;
-  let client_cookie = {};
-  if (cookies) {
-    client_cookie = cookie.parse(cookies);
-  }
-  if (!req.cookies["user"]) return;
-  let user = JSON.parse(req.cookies["user"]);
-
-  let user_res = await (
-    await set_data_in_database(`SELECT * FROM users WHERE username=?`, [
-      user.username,
-    ])
-  )[0];
-
-  if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
-    res.cookie("user", "");
-    res.status(406).json({
-      message: "لطفا دوباره لاگین کنید.",
-    });
-    return;
-  }
+  let { user_res, cookieUser } = await checkUserAthu(req, res);
+  if (!user_res || !cookieUser) return;
 
   if (user_res) {
     let members_ress;

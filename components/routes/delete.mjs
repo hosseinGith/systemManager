@@ -1,23 +1,17 @@
-import { encryptMessage, modifyUser, set_data_in_database, verifyToken } from "../core/utils.mjs";
+import {
+  checkUserAthu,
+  encryptMessage,
+  modifyUser,
+  set_data_in_database,
+  verifyToken,
+} from "../core/utils.mjs";
 
 const deleteFun = async (req, res) => {
   const { id } = req.body;
-  let user_res;
-  if (req.cookies.user) {
-    let cookieUser = JSON.parse(req.cookies.user);
-    user_res = await (
-      await set_data_in_database(
-        `SELECT * FROM users WHERE username=?`,
-        cookieUser.username
-      )
-    )[0];
-  }
-  if (user_res)
-    if (!verifyToken(JSON.parse(req.cookies.user).key, user_res.user_key)) {
-      res.cookie("user", "");
-      res.cookie("users", "");
-      user_res = "";
-    }
+
+  let { user_res, cookieUser } = await checkUserAthu(req, res);
+  if (!user_res || !cookieUser) return;
+
   let target_user = await (
     await set_data_in_database(`SELECT id FROM members WHERE id=?`, [id])
   )[0];

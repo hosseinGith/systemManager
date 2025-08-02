@@ -64,8 +64,6 @@ app.get("*/getDataSearch", [], async (req, res) => search(req, res));
 
 app.get("*/getFile/:fileName", async (req, res) => getFile(req, res));
 
-app.get("*/login", (req, res) => login(req, res));
-
 app.get("*/search", async (req, res, next) => searchPage(req, res, next));
 
 app.get("*/add-property", async (req, res, next) =>

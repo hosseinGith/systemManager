@@ -1,5 +1,9 @@
 import { fs } from "../core/settings.mjs";
-import { errorHand, set_data_in_database, verifyToken } from "../core/utils.mjs";
+import {
+  errorHand,
+  set_data_in_database,
+  verifyToken,
+} from "../core/utils.mjs";
 
 const any_path = async (req, res, next) => {
   try {
@@ -23,7 +27,7 @@ const any_path = async (req, res, next) => {
     let path = !user_res ? "pages/login.html" : "pages/index.html";
     let data = fs.readFileSync(path, "utf8");
     data = data.replace(/\?\=\d+\"/g, "?=" + Math.random() + '"');
-     res.send(data);
+    res.send(data);
   } catch (err) {
     errorHand(err);
     res.status(500).send("Server Error");

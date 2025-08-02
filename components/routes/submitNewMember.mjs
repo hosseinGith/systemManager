@@ -1,5 +1,6 @@
 import { cookie, moment } from "../core/settings.mjs";
 import {
+  checkUserAthu,
   encryptMessage,
   errorHand,
   isValidJalaliDate,
@@ -10,17 +11,12 @@ import {
 
 const submitNewMember = async (req, res) => {
   try {
-    const cookies = req.headers.cookie;
-    let client_cookie = {};
-    if (cookies) {
-      client_cookie = cookie.parse(cookies);
-    }
-    if (!req.cookies["user"]) return;
-    let user = JSON.parse(req.cookies["user"]);
+    let { user_res, cookieUser } = await checkUserAthu(req, res);
+    if (!user_res || !cookieUser) return;
 
     let goToUserEdit = req.body.goToUserEdit;
     delete req.body.goToUserEdit;
-    
+
     if (
       Number.isNaN(Number(req.body.nationalId)) ||
       !req.body.firstName ||
@@ -31,12 +27,6 @@ const submitNewMember = async (req, res) => {
       return res.status(400).json({ message: "همه ی فیلد ها را پر کنید" });
     }
 
-    let user_res = await (
-      await set_data_in_database(
-        `SELECT * FROM users WHERE username=?`,
-        user.username
-      )
-    )[0];
     if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
       res.cookie("user", "");
       res.status(406).json({

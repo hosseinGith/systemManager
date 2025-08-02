@@ -285,6 +285,32 @@ async function modifyUser(nationalId, username, isEdit) {
 const errorHand = (e) => {
   console.error(e);
 };
+
+const checkUserAthu = async (req, res) => {
+  let user_res;
+  let cookieUser;
+
+  if (req.cookies.user) {
+    cookieUser = JSON.parse(req.cookies.user);
+    user_res = await (
+      await set_data_in_database(`SELECT * FROM users WHERE username=?`, [
+        cookieUser.username,
+      ])
+    )[0];
+  }
+
+  if (user_res) {
+    if (!verifyToken(cookieUser.key, user_res.user_key)) {
+      res.cookie("user", "");
+      res.cookie("users", "");
+      user_res = "";
+      return res.status(401).send("دوباره لاگین کنید");
+    } else return { user_res, cookieUser };
+  } else {
+    return res.status(401).send("دوباره لاگین کنید");
+  }
+};
+
 export {
   hashPassword,
   isValidJalaliDate,
@@ -301,4 +327,5 @@ export {
   comparePassword,
   modifyUser,
   errorHand,
+  checkUserAthu,
 };

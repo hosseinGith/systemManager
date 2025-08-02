@@ -1,5 +1,6 @@
 import { fs } from "../core/settings.mjs";
 import {
+  checkUserAthu,
   errorHand,
   set_data_in_database,
   verifyToken,
@@ -7,22 +8,8 @@ import {
 
 const report = async (req, res, next) => {
   try {
-    let user_res;
-    if (req.cookies.user) {
-      let cookieUser = JSON.parse(req.cookies.user);
-      user_res = await (
-        await set_data_in_database(
-          `SELECT * FROM users WHERE username=?`,
-          cookieUser.username
-        )
-      )[0];
-    }
-    if (user_res)
-      if (!verifyToken(JSON.parse(req.cookies.user).key, user_res.user_key)) {
-        res.cookie("user", "");
-        res.cookie("users", "");
-        user_res = "";
-      }
+    let { user_res, cookieUser } = await checkUserAthu(req, res);
+    if (!user_res || !cookieUser) return;
 
     let path = !user_res ? "pages/login.html" : "pages/report.html";
     let data = fs.readFileSync(path, "utf8");

@@ -1,5 +1,6 @@
 import moment from "moment-jalaali";
 import {
+  checkUserAthu,
   encryptMessage,
   errorHand,
   isValidJalaliDate,
@@ -11,22 +12,8 @@ import {
 const editMember = async (req, res) => {
   const memberId = req.params.id;
   try {
-    let user_res;
-    let cookieUser = {};
-    if (req.cookies.user) {
-      cookieUser = JSON.parse(req.cookies.user);
-      user_res = await (
-        await set_data_in_database(`SELECT * FROM users WHERE username=?`, [
-          cookieUser.username,
-        ])
-      )[0];
-    }
-    if (user_res)
-      if (!verifyToken(cookieUser.key, user_res.user_key)) {
-        res.cookie("user", "");
-        res.cookie("users", "");
-        user_res = "";
-      }
+    let { user_res, cookieUser } = await checkUserAthu(req, res);
+    if (!user_res || !cookieUser) return;
 
     let member_res = await (
       await set_data_in_database(

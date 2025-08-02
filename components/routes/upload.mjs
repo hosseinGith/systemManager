@@ -1,39 +1,12 @@
 import path from "path";
-import { __dirname, cookie, fs } from "../core/settings.mjs";
-import {
-  encryptMessage,
-  errorHand,
-  set_data_in_database,
-  verifyToken,
-} from "../core/utils.mjs";
+import { __dirname, fs } from "../core/settings.mjs";
+import { checkUserAthu, encryptMessage, errorHand } from "../core/utils.mjs";
 
 const upload = async (req, res) => {
   try {
-    const cookies = req.headers.cookie;
-    let client_cookie = {};
-    if (cookies) {
-      client_cookie = cookie.parse(cookies);
-    }
-    if (!req.cookies["user"])
-      return res.status(401).json({
-        message: "لطفا دوباره لاگین کنید.",
-      });
-    let user = JSON.parse(req.cookies["user"]);
+    let { user_res, cookieUser } = await checkUserAthu(req, res);
+    if (!user_res || !cookieUser) return;
 
-    let user_res = await (
-      await set_data_in_database(
-        `SELECT * FROM users WHERE username=?`,
-        user.username
-      )
-    )[0];
-
-    if (!verifyToken(JSON.parse(client_cookie.user).key, user_res.user_key)) {
-      res.cookie("user", "");
-      res.status(401).json({
-        message: "لطفا دوباره لاگین کنید.",
-      });
-      return;
-    }
     const { ext } = req.headers;
     if (ext && user_res) {
       let decoded_url = `member-time(${Date.now()})-randText(${Date.now().toString(
