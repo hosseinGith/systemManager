@@ -1,6 +1,11 @@
 import path from "path";
 import { __dirname, fs } from "../core/settings.mjs";
-import { checkUserAthu, encryptMessage, errorHand } from "../core/utils.mjs";
+import {
+  checkUserAthu,
+  encryptMessage,
+  errorHand,
+  sendEmailUserSubmited,
+} from "../core/utils.mjs";
 
 const upload = async (req, res) => {
   try {
@@ -63,6 +68,12 @@ const upload = async (req, res) => {
           message: "فایل با موفقیت آپلود شد.",
           url: `/getFile/${eecoded_url}`,
         });
+        sendEmailUserSubmited(
+          `عکس با شناسه ${`/getFile/${eecoded_url}`}
+            توسط ${user_res.username}
+            اضافه شد
+            `
+        );
       } catch (e) {
         errorHand(e);
         res.status(500).json({ message: "خطا در پردازش فایل", error: e });

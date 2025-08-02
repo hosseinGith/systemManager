@@ -3,6 +3,7 @@ import {
   decryptMessage,
   encryptMessage,
   errorHand,
+  sendEmailUserSubmited,
   set_data_in_database,
   verifyToken,
 } from "../core/utils.mjs";
@@ -16,7 +17,7 @@ const addUserBookScore = async (req, res) => {
 
     let member_res = await (
       await set_data_in_database(
-        `SELECT id,nationalId FROM members WHERE id=?`,
+        `SELECT id,nationalId,firstName,lastName FROM members WHERE id=?`,
         [id]
       )
     )[0];
@@ -25,6 +26,9 @@ const addUserBookScore = async (req, res) => {
         status: false,
         message: "کاربر مورد نظر در سیستم وجود ندارد.",
       });
+    member_res.firstName = decryptMessage(member_res.firstName);
+    member_res.lastName = decryptMessage(member_res.lastName);
+
     if (datas.scoreType !== "mostamarClass") {
       let check_score = await (
         await set_data_in_database(
@@ -55,6 +59,16 @@ const addUserBookScore = async (req, res) => {
           status: true,
           message: "نمره ویرایش شد.",
         });
+        sendEmailUserSubmited(
+          `نمره ${datas.scoreInput} 
+          در کتاب ${datas.bookName} 
+          در پایه ${datas.educationalBaseAddScore}
+          به کاربر ${member_res.firstName + " " + member_res.lastName}
+          با ایدی ${decryptMessage(member_res.nationalId)}
+          توسط ${user_res.username}
+          ویرایش شد
+          `
+        );
         return;
       }
     }
@@ -71,6 +85,16 @@ const addUserBookScore = async (req, res) => {
       ]
     );
 
+    sendEmailUserSubmited(
+      `نمره ${datas.scoreInput} 
+      در کتاب ${datas.bookName} 
+      در پایه ${datas.educationalBaseAddScore}
+      به کاربر ${member_res.firstName + member_res.lastName}
+      با ایدی ${decryptMessage(member_res.nationalId)}
+      توسط ${user_res.username}
+      اضافه شد
+      `
+    );
     res.status(200).json({
       status: true,
       message: "نمره اضافه شد.",

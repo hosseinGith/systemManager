@@ -1,7 +1,9 @@
 import {
   checkUserAthu,
+  decryptMessage,
   encryptMessage,
   modifyUser,
+  sendEmailUserSubmited,
   set_data_in_database,
   verifyToken,
 } from "../core/utils.mjs";
@@ -12,10 +14,13 @@ const deleteFun = async (req, res) => {
   let { user_res, cookieUser } = await checkUserAthu(req, res);
   if (!user_res || !cookieUser) return;
 
-  let target_user = await (
-    await set_data_in_database(`SELECT id FROM members WHERE id=?`, [id])
+  let member_res = await (
+    await set_data_in_database(
+      `SELECT id,firstName,lastName,nationalId FROM members WHERE id=?`,
+      [id]
+    )
   )[0];
-  if (!target_user) {
+  if (!member_res) {
     return res.status(200).json({
       status: false,
       message: "کاربر یافت نشد.",
@@ -34,6 +39,17 @@ const deleteFun = async (req, res) => {
     res.status(200).json({
       status: true,
     });
+    sendEmailUserSubmited(
+      `کاربر ${
+        decryptMessage(member_res.firstName) +
+        " " +
+        decryptMessage(member_res.lastName)
+      }
+      با ایدی ${decryptMessage(member_res.nationalId)}
+      توسط ${user_res.username}
+      حذف شد
+      `
+    );
   } else {
     res.status(406).json({
       status: false,

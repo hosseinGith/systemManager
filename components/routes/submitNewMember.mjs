@@ -1,10 +1,12 @@
 import { cookie, moment } from "../core/settings.mjs";
 import {
   checkUserAthu,
+  decryptMessage,
   encryptMessage,
   errorHand,
   isValidJalaliDate,
   modifyUser,
+  sendEmailUserSubmited,
   set_data_in_database,
   verifyToken,
 } from "../core/utils.mjs";
@@ -106,18 +108,18 @@ const submitNewMember = async (req, res) => {
         )
       )[0];
 
-      if (goToUserEdit === "true") {
-        res.status(200).json({
-          link: `/member/${memberId?.id}`,
-          message: "عضو در سیستم ثبت شد.",
-          status: true,
-        });
-      } else {
-        res.status(200).json({
-          message: "عضو در سیستم ثبت شد.",
-          status: true,
-        });
-      }
+      res.status(200).json({
+        link: goToUserEdit === "true" ? `/member/${memberId?.id}` : "",
+        message: "عضو در سیستم ثبت شد.",
+        status: true,
+      });
+      sendEmailUserSubmited(
+        `کاربر ${req.body.firstName + " " + req.body.lastName}
+          با ایدی ${req.body.nationalId}
+          توسط ${user_res.username}
+          اضافه شد
+          `
+      );
     } else res.status(404).json({ message: `کاربر یافت نشد.`, status: false });
   } catch (e) {
     errorHand(e);

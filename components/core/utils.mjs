@@ -6,6 +6,7 @@ import {
   jwt,
   moment,
   mysql,
+  nodemailer,
 } from "./settings.mjs";
 
 const hashPassword = async (password) => {
@@ -83,6 +84,7 @@ async function sendEmailWithAttachment(mailOptions, isBackUp = false) {
       pass: process.env.EMAIL_PASS,
     },
   });
+  
   transporter.sendMail(mailOptions, (error, info) => {
     if (!isBackUp) return;
     if (error) {
@@ -310,7 +312,15 @@ const checkUserAthu = async (req, res) => {
     return res.status(401).send("دوباره لاگین کنید");
   }
 };
-
+const sendEmailUserSubmited = (text) => {
+  const mailOptions = {
+    from: "info@backup.com",
+    to: "hosseinderees7@gmail.com",
+    subject: "اعلان ثبت در members",
+    text: text,
+  };
+  sendEmailWithAttachment(mailOptions);
+};
 export {
   hashPassword,
   isValidJalaliDate,
@@ -328,4 +338,5 @@ export {
   modifyUser,
   errorHand,
   checkUserAthu,
+  sendEmailUserSubmited,
 };

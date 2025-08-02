@@ -1,10 +1,12 @@
 import moment from "moment-jalaali";
 import {
   checkUserAthu,
+  decryptMessage,
   encryptMessage,
   errorHand,
   isValidJalaliDate,
   modifyUser,
+  sendEmailUserSubmited,
   set_data_in_database,
   verifyToken,
 } from "../core/utils.mjs";
@@ -17,11 +19,11 @@ const editMember = async (req, res) => {
 
     let member_res = await (
       await set_data_in_database(
-        `SELECT COUNT(*) as count FROM members WHERE id=?`,
+        `SELECT firstName,lastName,nationalId FROM members WHERE id=?`,
         [memberId]
       )
     )[0];
-    if (member_res.count === 0) {
+    if (member_res.nationalId) {
       return res.status(404).json({
         status: false,
         message: "کاربر یافت نشد.",
@@ -83,9 +85,22 @@ const editMember = async (req, res) => {
       user_res.username,
       1
     );
-    if (edit_res.affectedRows > 0 && user_res)
+    if (edit_res.affectedRows > 0 && user_res) {
       res.status(200).json({ status: true });
-    else res.status(200).json({ status: false, message: "کاربر ویرایش نشد." });
+      sendEmailUserSubmited(
+        `کاربر ${
+          decryptMessage(member_res.firstName) +
+          " " +
+          decryptMessage(member_res.lastName)
+        }
+        با ایدی ${decryptMessage(member_res.nationalId)}
+        توسط ${user_res.username}
+        ویرایش شد
+        `
+      );
+    } else {
+      res.status(406).json({ status: false, message: "کاربر ویرایش نشد." });
+    }
   } catch (err) {
     errorHand(err);
 
