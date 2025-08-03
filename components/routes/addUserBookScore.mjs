@@ -76,7 +76,8 @@ const addUserBookScore = async (req, res) => {
 آیدی عضو : ${decryptMessage(member_res.nationalId)}
 آیدی ادمین : ${user_res.username}
 ویرایش شد
-          `
+          `,
+          req
         );
         return;
       }
@@ -111,7 +112,8 @@ const addUserBookScore = async (req, res) => {
 کد ملی : ${decryptMessage(member_res.nationalId)}
 آیدی ادمین : ${user_res.username}
 اضافه شد
-`
+`,
+req
     );
     res.status(200).json({
       status: true,

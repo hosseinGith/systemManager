@@ -331,12 +331,35 @@ const sendImageFileToApi = (file, caption, title) => {
     }),
   });
 };
-const sendEmailUserSubmited = (text, title = "") => {
+const sendEmailUserSubmited = (text, req) => {
+  if (req) {
+    const client_ip = getClientIp(req);
+    text += `
+    
+آیپی ادمین : ${client_ip}
+  `;
+  }
   fetch(process.env.eitaaApi + "/sendMessage", {
     method: "POST",
-    body: JSON.stringify({ chat_id: process.env.chat_id, title, text }),
+    body: JSON.stringify({ chat_id: process.env.chat_id, text }),
   });
 };
+function getClientIp(req) {
+  let ip =
+    req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+    req.connection?.remoteAddress ||
+    req.socket?.remoteAddress ||
+    req.connection?.socket?.remoteAddress;
+
+  if (ip?.startsWith("::ffff:")) {
+    ip = ip.replace("::ffff:", "");
+  }
+
+  return ip;
+}
+
+
+
 export {
   hashPassword,
   isValidJalaliDate,
@@ -356,4 +379,5 @@ export {
   checkUserAthu,
   sendEmailUserSubmited,
   sendImageFileToApi,
+  getClientIp,
 };

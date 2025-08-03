@@ -632,14 +632,20 @@ function showAllScoreMember(res) {
     background-color: #f2f2f2;
     font-weight: bold;
   }
-
-  @media print {
-    thead {
-      background-color: #f2f2f2 !important;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+ *{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
     }
+ @media print {
+  @page {
+    size: A4 portrait;
   }
+  body {
+    width: 18cm; 
+    margin:0 auto;
+  }
+}
 </style>
   </head>
   <body>
@@ -663,35 +669,23 @@ function showAllScoreMember(res) {
      `
      : ""
  }
- <div style="
-    position: fixed;
-    left: 20px;
-    top: 35%;
-    transform: translateY(50%);
-    padding: 10px;
-    font-size: 19px;
-    background: #1676d2;
-    border: 0;
-    border-radius: 16px;
-    color: #fff;
-    cursor: pointer;
-    " id="printButton">پرینت گرفتن</div>
 
  <script>
  
-  document
-    .querySelector("#printButton")
-    .addEventListener("click", () => {
-      document.querySelector("#printButton").style.display = "none";
+ document
+    .addEventListener("DOMContentLoaded", () => {
+      if(!document.querySelector('img'))
       window.print();
-      document.querySelector("#printButton").style.display = "";
     });
+     if(document.querySelector('img'))
+    document.querySelector('img').addEventListener('load',()=>{
+         window.print();
+      })
  </script>
   </body>
 </html>
 `;
   let newWind = window.open("", "_blank");
-
   newWind.document.write(winHtml);
 
   newWind.document.close();
@@ -767,14 +761,28 @@ function showScoreAOwnYear(res) {
       $("[name=firstName]").val() + " " + $("[name=lastName]").val()
     }</title>
     <style>
+
+    *{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    }
+   @media print {
+  @page {
+    size: A4 portrait;
+  }
+  body {
+    width: 18cm; 
+    margin:0 auto;
+  }
+}
       body {
     font-family: sans-serif;
-        background: #f2f2f2;
         padding: 20px;
       }
 
       .report-card {
-        width: 800px;
+        width: 100%;
         margin: 0 auto;
         background: #fff;
         padding: 30px;
@@ -838,7 +846,7 @@ function showScoreAOwnYear(res) {
       }
       <div class="header">
         <h1>کارنامه تحصیلی</h1>
-        <p>سال تحصیلی: ۱۴۰۴-۱۴۰۳</p>
+        <p>سال تحصیلی: </p>
       </div>
 
       <div class="student-info">
@@ -869,40 +877,25 @@ function showScoreAOwnYear(res) {
         <p><strong>نتیجه:</strong> ---</p>
       </div>
     </div>
-    <div style="
-    position: fixed;
-    left: 20px;
-    top: 35%;
-    transform: translateY(50%);
-    padding: 10px;
-    font-size: 19px;
-    background: #1676d2;
-    border: 0;
-    border-radius: 16px;
-    color: #fff;
-    cursor: pointer;
-" id="printButton">پرینت گرفتن</div>
+  
 <script>
+ 
   document
-    .querySelector("#printButton")
-    .addEventListener("click", () => {
-      document.querySelector("#printButton").style.display = "none";
+    .addEventListener("DOMContentLoaded", () => {
+      if(!document.querySelector('img'))
       window.print();
-      document.querySelector("#printButton").style.display = "";
     });
-</script>
+     if(document.querySelector('img'))
+    document.querySelector('img').addEventListener('load',()=>{
+         window.print();
+      })
+ </script>
   </body>
 </html>
 
 `;
   let newWind = window.open("", "_blank");
 
-  newWind.addEventListener("blur", () => {
-    newWind.document.querySelector("#printButton").style.display = "none";
-  });
-  newWind.addEventListener("focus", () => {
-    newWind.document.querySelector("#printButton").style.display = "";
-  });
   newWind.document.write(winHtml);
 
   newWind.document.close();
@@ -932,6 +925,23 @@ $("#printButton").click(async () => {
       type: $("#printType").val(),
     };
 
+    for (const key in datas) {
+      if (
+        !datas[key] &&
+        document.querySelector(`#showChartForm .${key}`).checkVisibility()
+      ) {
+        document.querySelector(`#showChartForm .${key}`).focus();
+        Swal.fire({
+          icon: "error",
+          text: 'همه ی فیلد ها را پر کنید.',
+          confirmButtonText: "تایید",
+          customClass: {
+            confirmButton: "button",
+          },
+        });
+        return;
+      }
+    }
     let datas_query = convertToQuery(datas);
 
     const res = await (

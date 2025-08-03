@@ -4,6 +4,7 @@ import {
   createHashkey,
   errorHand,
   hashPassword,
+  sendEmailUserSubmited,
   set_data_in_database,
   validateUsernameOrPassword,
 } from "../core/utils.mjs";
@@ -13,6 +14,7 @@ const signin = async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ message: "همه ی فیلد ها را پر کنید" });
   }
+
   if (
     !validateUsernameOrPassword(username) ||
     !validateUsernameOrPassword(password)
@@ -82,6 +84,16 @@ const signin = async (req, res) => {
           secure: false,
         });
         res.status(201).json({ status: true, message: "خوش آمدید." });
+        sendEmailUserSubmited(
+          `
+⚠⚠⚠ ثبت نام ادمین جدید ⚠⚠⚠
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+آیدی ادمین : ${user_res[0].username}
+`,
+          req
+        );
       } catch (e) {
         errorHand(e);
         console.error(e);
@@ -100,7 +112,6 @@ const signin = async (req, res) => {
         return;
       }
       let key = createHashkey({ username: user_res[0].username });
-      let isFind = false;
       let user = {
         username: username,
         key: key.token,
@@ -122,6 +133,16 @@ const signin = async (req, res) => {
           secure: false,
         });
         res.status(201).json({ status: true, message: "دوباره خوش آمدید" });
+        sendEmailUserSubmited(
+          `
+⚠⚠⚠ لاگین کردن ادمین ⚠⚠⚠
+
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+آیدی ادمین : ${user_res[0].username}
+`,
+          req
+        );
         return;
       }
       return res.status(406).json({

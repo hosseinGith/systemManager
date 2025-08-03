@@ -54,7 +54,8 @@ const addProperty = async (req, res) => {
 
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 
-پارامتر جدید در صفحه اصلی اضافه شد`
+پارامتر جدید در صفحه اصلی اضافه شد`,
+        req
       );
       res.status(200).json({ status: true, message: "ستون اضافه شد." });
     } else {

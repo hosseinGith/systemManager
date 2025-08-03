@@ -48,10 +48,11 @@ const editMember = async (req, res) => {
             };
           } else {
             let value = req.body[item];
+            let data = value;
             if (item === "member_image_url")
               data = "https://members.maktababadan.ir" + data;
-            dec_values.push(`${item} = ${data}`);
-            
+            if (data) dec_values.push(`${item} = ${data}`);
+
             value = encryptMessage(value);
             columns.push(`${item} = ?`);
             values.push(value);
@@ -77,8 +78,7 @@ const editMember = async (req, res) => {
           let data = value;
           if (item === "member_image_url")
             data = "https://members.maktababadan.ir" + data;
-
-          dec_values.push(`${item} = ${data}`);
+          if (data) dec_values.push(`${item} = ${data}`);
 
           value = encryptMessage(value);
           columns.push(`${item} = ?`);
@@ -117,7 +117,8 @@ const editMember = async (req, res) => {
 
 ${dec_values.join("\n ➖➖➖➖➖➖➖ \n")}
 
-        `
+        `,
+        req
       );
     } else {
       res.status(406).json({ status: false, message: "کاربر ویرایش نشد." });

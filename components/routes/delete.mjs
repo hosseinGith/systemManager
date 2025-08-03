@@ -54,7 +54,7 @@ const deleteFun = async (req, res) => {
 کد ملی : ${decryptMessage(member_res.nationalId)}
 آیدی ادمین : ${user_res.username}
 حذف شد ❌`,
-      ""
+      req
     );
   } else {
     errorHand();

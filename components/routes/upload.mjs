@@ -77,7 +77,8 @@ const upload = async (req, res) => {
 شناسه عکس : ${`https://members.maktababadan.ir/getFile/${eecoded_url}`}
 آیدی ادمین : ${user_res.username}
 اضافه شد
-`
+`,
+          req
         );
       } catch (e) {
         errorHand(e);

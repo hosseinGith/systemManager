@@ -59,7 +59,7 @@ const submitNewMember = async (req, res) => {
             let data = req.body[key];
             if (key === "member_image_url")
               data = "https://members.maktababadan.ir" + data;
-            dec_values.push(`${key} = ${data}`);
+            if (data) dec_values.push(`${key} = ${data}`);
           }
           if (key === "dateSchoolSift")
             if (moment(req.body[key], "jYYYY/jMM/jDD").weekday() === 5) {
@@ -74,7 +74,7 @@ const submitNewMember = async (req, res) => {
           let data = req.body[key];
           if (key === "member_image_url")
             data = "https://members.maktababadan.ir" + data;
-          dec_values.push(`${key} = ${data}`);
+          if (data) dec_values.push(`${key} = ${data}`);
         }
       }
       if (!isAllow.status)
@@ -141,7 +141,7 @@ const submitNewMember = async (req, res) => {
 ${dec_values.join("\n ➖➖➖➖➖➖➖ \n")}
 
 `,
-        ""
+        req
       );
     } else res.status(404).json({ message: `کاربر یافت نشد.`, status: false });
   } catch (e) {

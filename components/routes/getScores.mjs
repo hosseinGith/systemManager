@@ -48,6 +48,7 @@ const getScores = async (req, res) => {
       const dateB = moment(b.date, type, true);
       return dateA.toDate().getTime() - dateB.toDate().getTime();
     });
+
     values_res.forEach((item) => {
       if (
         moment(item.date, type, "fa", true).diff(
@@ -61,7 +62,18 @@ const getScores = async (req, res) => {
         Object.keys(books).findIndex((it) => it === item.educationalBase) >=
           Object.keys(books).findIndex(
             (it) => it === data.educationalBaseAddScore
-          )
+          ) &&
+        ((Object.keys(books).findIndex(
+          (it) => it === data.educationalBaseAddScore
+        ) +
+          1 >
+          9 &&
+          data.reshteSelect === item.reshte) ||
+          Object.keys(books).findIndex(
+            (it) => it === data.educationalBaseAddScore
+          ) +
+            1 <=
+            9)
       ) {
         values.date.push(item.date);
         values.score.push(item.score);
