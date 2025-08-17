@@ -29,13 +29,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="/styles/main.css?v=1" />
 
-
-
     <script src="/scripts/chart.js"></script>
     <script src="/scripts/hammerjs.js"></script>
     <script src="/scripts/chartjs-plugin-zoom.js"></script>
 
-   
     <style>
       table {
         width: 95%;
@@ -255,7 +252,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">راست یا چپ دست:</span>
                   <select class="w-full input" type="text" name="mainHend">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="راست">راست</option>
                     <option value="چپ">چپ</option>
                   </select>
@@ -263,7 +260,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">راست یا چپ پا:</span>
                   <select class="w-full input" type="text" name="mainFoot">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="راست">راست</option>
                     <option value="چپ">چپ</option>
                   </select>
@@ -281,7 +278,23 @@
 
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">مربی:</span>
-                  <input class="w-full input" type="text" name="teacherName" />
+                  <select
+                    class="w-full border-2 border-[#bbb] outline-none px-4 py-2 rounded-lg h-[44px]"
+                    type="text"
+                    name="teacherName"
+                  >
+                  <option disabled selected value="">
+                    انتخاب کنید...
+                  </option>
+                    <option value="شیخ یوسف حبیب نژاد">
+                      شیخ یوسف حبیب نژاد
+                    </option>
+                    <option value="شیخ عماد مقدم">شیخ عماد مقدم</option>
+                    <option value="حسین سلمان زاده">حسین سلمان زاده</option>
+                    <option value=" حیدر چسباوی">حیدر چسباوی</option>
+                    <option value="سجاد مقدم">سجاد مقدم</option>
+                    <option value="سید محمد باقریان">سید محمد باقریان</option>
+                  </select>
                 </div>
 
                 <div class="flex" style="flex-wrap: wrap">
@@ -307,7 +320,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">موارد استفاده از موبایل:</span>
                   <select class="w-full input" type="text" name="phoneUseAbout">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="بازی">بازی</option>
                     <option value="ادیت">ادیت</option>
                   </select>
@@ -385,7 +398,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">میزان استفاده:</span>
                   <select class="w-full input" type="text" name="sosialLength">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="زیاد">زیاد</option>
                     <option value="متوسط">متوسط</option>
                     <option value="کم">کم</option>
@@ -400,7 +413,7 @@
                     type="text"
                     name="learningLength"
                   >
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="زیاد">زیاد</option>
                     <option value="متوسط">متوسط</option>
                     <option value="کم">کم</option>
@@ -420,7 +433,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">فیلم:</span>
                   <select class="w-full input" type="text" name="movieAbout">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="زیاد">زیاد</option>
                     <option value="متوسط">متوسط</option>
                     <option value="کم">کم</option>
@@ -468,7 +481,7 @@
                   <span style="font-size: 13px">میزان تماشای فیلم:</span>
 
                   <select class="w-full input" type="text" name="moviesLength">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="زیاد">زیاد</option>
                     <option value="متوسط">متوسط</option>
                     <option value="کم">کم</option>
@@ -530,7 +543,7 @@
                     type="text"
                     name="animateOrMovie"
                   >
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="فیلم">فیلم</option>
                     <option value="انیمیشن">انیمیشن</option>
                   </select>
@@ -557,7 +570,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">خواب ظهرانه:</span>
                   <select class="w-full input" type="text" name="afternoonNap">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="بله">بله</option>
                     <option value="خیر">خیر</option>
                   </select>
@@ -611,7 +624,7 @@
                     type="text"
                     name="educationalBase"
                   >
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="اول">اول</option>
                     <option value="دوم">دوم</option>
                     <option value="سوم">سوم</option>
@@ -674,7 +687,7 @@
                     class="w-full input"
                     name="schoolSift"
                   >
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="صبح">صبح</option>
                     <option value="عصر">عصر</option>
                     <option value="ثابت صبح">ثابت صبح</option>
@@ -696,7 +709,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">طبقه:</span>
                   <select class="w-full input" type="text" name="tabaghe">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="هم کف">هم کف</option>
                     <option value="طبقه دوم">طبقه دوم</option>
                     <option value="طبقه سوم">طبقه سوم</option>
@@ -781,7 +794,7 @@
                     >برگزاری نماز جماعت ظهر و عصر:</span
                   >
                   <select class="w-full input" type="text" name="prayingStatus">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="بله">بله</option>
                     <option value="خیر">خیر</option>
                   </select>
@@ -955,7 +968,7 @@
                 <div class="flex" style="flex-wrap: wrap">
                   <span style="font-size: 13px">روز های تحصیلی:</span>
                   <select class="w-full input" type="text" name="schoolDays">
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
                     <option value="شنبه تا چهارشنبه">شنبه تا چهارشنبه</option>
                     <option value=" شبنه تا پنجشنبه - (تمام وقت)">
                       شبنه تا پنجشنبه - (تمام وقت)
@@ -1167,7 +1180,7 @@
                   type="text"
                   onchange="userEducationalBaseChangeHand(`addScoreForm`)"
                 >
-                  <option value="">انتخاب کنید...</option>
+                  <option value="" disabled selected>انتخاب کنید...</option>
 
                   <option value="اول">اول</option>
                   <option value="دوم">دوم</option>
@@ -1289,7 +1302,7 @@
                     onchange="userEducationalBaseChangeHand(`showReportScore`)"
                     required
                   >
-                    <option value="">انتخاب کنید...</option>
+                    <option value="" disabled selected>انتخاب کنید...</option>
 
                     <option value="اول">اول</option>
                     <option value="دوم">دوم</option>
@@ -1334,7 +1347,11 @@
                     <span style="font-size: 13px" class="block text-start"
                       >کتاب مورد نظر:</span
                     >
-                    <select class="w-full input bookName" required type="text"></select>
+                    <select
+                      class="w-full input bookName"
+                      required
+                      type="text"
+                    ></select>
                   </div>
                   <div class="hidden w-full textBookParent">
                     <span style="font-size: 13px" class="block text-start"
@@ -1406,7 +1423,6 @@
                     <option value="line">خطی</option>
                     <option value="bar">ستونی</option>
                     <option value="pie">دایره</option>
-                    <option value="radar">رادار</option>
                   </select>
                 </div>
                 <div class="py-4">
@@ -1425,7 +1441,10 @@
                 <span>تعداد نتایج :</span>
                 <span id="pcsResult"></span>
               </p>
-              <canvas id="canvasChart" class="w-full bg-white h-[400px]"></canvas>
+              <canvas
+                id="canvasChart"
+                class="w-full bg-white h-[400px]"
+              ></canvas>
             </div>
           </div>
         </div>
